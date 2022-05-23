@@ -7,6 +7,7 @@ fake.add_provider(Provider)
 fake : Provider
 
 user_admin_correct = {
+    'username': fake.user_name(),
     'email': fake.email(),
     'password': fake.password(),
     'first_name': fake.first_name(),
@@ -16,7 +17,8 @@ user_admin_correct = {
 }
 
 user_admin_incorrect_email = {
-    'email': fake.email().replace('@',''),
+    'username': fake.user_name(),
+    'email': fake.email(),
     'password': fake.password(),
     'first_name': fake.first_name(),
     'last_name': fake.last_name(),
@@ -25,6 +27,7 @@ user_admin_incorrect_email = {
 }
 
 user_seller_correct = {
+    'username': fake.user_name(),
     'email': fake.email(),
     'password': fake.password(),
     'first_name': fake.first_name(),
@@ -34,7 +37,8 @@ user_seller_correct = {
 }
 
 user_seller_incorrect_email = {
-    'email': fake.email().replace('@',''),
+    'username': fake.user_name(),
+    'email': fake.email(),
     'password': fake.password(),
     'first_name': fake.first_name(),
     'last_name': fake.last_name(),
