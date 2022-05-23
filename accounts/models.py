@@ -5,7 +5,7 @@ from django.db import models
 from django.utils import timezone
 
 
-class AccountsModel(AbstractUser):
+class AccountModel(AbstractUser):
     
     id = models.UUIDField(primary_key=True,default=uuid4,editable=False)
     email = models.EmailField(unique=True)

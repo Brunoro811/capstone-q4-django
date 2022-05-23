@@ -1,6 +1,6 @@
 import uuid
 
-from accounts.models import AccountsModel
+from accounts.models import AccountModel
 from accounts.tests.utils import user_admin_correct
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import AbstractUser
@@ -15,7 +15,7 @@ class AccountsModelTest(TestCase):
         
         cls.email = user_admin_correct['email']
         cls.password = user_admin_correct['password']
-        cls.user_admin_correct_object = AccountsModel.objects.create(**user_admin_correct)
+        cls.user_admin_correct_object = AccountModel.objects.create(**user_admin_correct)
         
         return super().setUpTestData()
     
