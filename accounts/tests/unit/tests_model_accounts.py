@@ -12,7 +12,7 @@ class AccountsModelTest(TestCase):
 
     @classmethod
     def setUpTestData(cls) -> None:
-        
+        cls.username = user_admin_correct['username']
         cls.email = user_admin_correct['email']
         cls.password = user_admin_correct['password']
         cls.is_admin = user_admin_correct['is_admin']
@@ -27,6 +27,9 @@ class AccountsModelTest(TestCase):
         
         self.assertIsInstance(self.user_admin_correct_object.id, uuid.UUID)
         
+        self.assertIsInstance(self.user_admin_correct_object.username, str)
+        self.assertEqual(self.user_admin_correct_object.username, self.username)
+
         self.assertIsInstance(self.user_admin_correct_object.email, str)
         self.assertEqual(self.user_admin_correct_object.email, self.email)
 
@@ -46,3 +49,4 @@ class AccountsModelTest(TestCase):
         self.assertEqual(self.last_name, self.user_admin_correct_object.last_name)
         
         self.assertIsInstance(self.user_admin_correct_object, AbstractUser)
+
