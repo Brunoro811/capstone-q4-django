@@ -27,5 +27,7 @@ jobs:
         pip install -r requirements.txt
     - name: Create Env
       run: echo "TEST=True" > .env
+    - name: Create Migrations
+      run: python manage.py makemigrations
     - name: Run Tests
       run: python manage.py test -v 2
