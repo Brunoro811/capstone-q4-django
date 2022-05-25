@@ -5,6 +5,8 @@ from accounts.tests.utils import user_admin_correct
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import AbstractUser
 from django.test import TestCase
+from stores.models import StoreModel
+from stores.tests.utils import store_correct
 
 
 class AccountsModelTest(TestCase):
@@ -12,6 +14,7 @@ class AccountsModelTest(TestCase):
 
     @classmethod
     def setUpTestData(cls) -> None:
+
         cls.username = user_admin_correct['username']
         cls.email = user_admin_correct['email']
         cls.password = user_admin_correct['password']
@@ -19,7 +22,10 @@ class AccountsModelTest(TestCase):
         cls.is_seller = user_admin_correct['is_seller']
         cls.first_name = user_admin_correct['first_name']
         cls.last_name = user_admin_correct['last_name']
-        cls.user_admin_correct_object = AccountModel.objects.create_user(**user_admin_correct)
+
+        cls.store_object = StoreModel.objects.create(**store_correct)
+        
+        cls.user_admin_correct_object = AccountModel.objects.create_user(**user_admin_correct, store=cls.store_object)
         
         return super().setUpTestData()
     
@@ -50,3 +56,6 @@ class AccountsModelTest(TestCase):
         
         self.assertIsInstance(self.user_admin_correct_object, AbstractUser)
 
+    def test_model_accounts_foreignkey_store_id_field(self):
+        
+        self.assertIsInstance(self.user_admin_correct_object.store , StoreModel)

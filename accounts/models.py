@@ -14,3 +14,4 @@ class AccountModel(AbstractUser):
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now,editable=False)
 
+    store = models.ForeignKey("stores.StoreModel",on_delete=models.CASCADE,db_column='store_id')
