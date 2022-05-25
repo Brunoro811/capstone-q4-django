@@ -64,4 +64,23 @@ class TestAccounst(APITestCase):
             format="json",
         )
         self.assertEqual(response.status_code, 401)
+
+    def test_if_cant_list_all_without_being_logged(self):
+        response = self.client.get("/accounts/", format="json")
+
+        self.assertEqual(response.status_code, 401)
+        self.assertIn("detail", response.json())
+
+    def test_if_can_list_all_users_as_admin(self):
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + self.admin_token)
+        response = self.client.get("/accounts/", format="json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.json(), list)
+
+    def test_if_cant_list_all_users_as_seller(self):
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + self.seller_token)
+        response = self.client.get("/accounts/", format="json")
+
+        self.assertEqual(response.status_code, 403)
         self.assertIn("detail", response.json())
