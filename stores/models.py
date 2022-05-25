@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 from django.db import models
+from django.utils import timezone
 
 
 class StoreModel(models.Model):
@@ -12,3 +13,6 @@ class StoreModel(models.Model):
     zip_code = models.CharField(max_length=9)
     state = models.CharField(max_length=10)
     other_information = models.CharField(max_length=150)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField()
