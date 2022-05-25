@@ -18,7 +18,7 @@ def login(request):
     )
     
     if not user:
-        return Response({'message': "Invalid credentials"}, status.HTTP_401_UNAUTHORIZED)
+        return Response({'detail': "Invalid credentials"}, status.HTTP_401_UNAUTHORIZED)
     
     token, _ = Token.objects.get_or_create(user=user)
 
