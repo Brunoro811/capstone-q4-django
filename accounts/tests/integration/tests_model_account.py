@@ -13,7 +13,7 @@ class TestAccounst(APITestCase):
         cls.seller_token = Token.objects.get_or_create(user=test_seller)[0].key
 
     def test_if_cant_get_one_user_without_being_logged(self):
-        response = self.client.get("/api/accounts/", format="json")
+        response = self.client.get("/accounts/", format="json")
 
         self.assertEqual(response.status_code, 401)
         self.assertIn("detail", response.json())
@@ -21,7 +21,7 @@ class TestAccounst(APITestCase):
     def test_if_can_get_one_user_as_admin(self):
         user_id = Token.objects.get(key=self.seller_token).user.id
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.admin_token)
-        response = self.client.get(f"/api/accounts/{user_id}", format="json")
+        response = self.client.get(f"/accounts/{user_id}/", format="json")
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("id", response.json())
@@ -37,7 +37,7 @@ class TestAccounst(APITestCase):
         user_id = Token.objects.get(key=self.seller_token).user.id
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.seller_token)
 
-        response = self.client.get(f"/api/accounts/{user_id}/", format="json")
+        response = self.client.get(f"/accounts/{user_id}/", format="json")
 
         self.assertEqual(response.status_code, 403)
         self.assertIn("detail", response.json())
@@ -45,7 +45,7 @@ class TestAccounst(APITestCase):
     def test_if_cant_get_one_user_if_user_dont_exists(self):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.admin_token)
         response = self.client.get(
-            "/api/accounts/230d81bf-2092-420a-a310-505ed9a1c243/", format="json"
+            "/accounts/230d81bf-2092-420a-a310-505ed9a1c243/", format="json"
         )
         self.assertEqual(response.status_code, 404)
         self.assertIn("detail", response.json())
