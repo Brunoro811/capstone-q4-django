@@ -14,7 +14,7 @@ class TestAccounst(APITestCase):
 
     def test_if_user_can_login_with_correct_email_and_password(self):
         response = self.client.post(
-            "/api/login/",
+            "/login/",
             {
                 "username": user_admin_correct["username"],
                 "password": user_admin_correct["password"],
@@ -26,7 +26,7 @@ class TestAccounst(APITestCase):
 
     def test_if_user_cant_login_missing_password(self):
         response = self.client.post(
-            "/api/login/",
+            "/login/",
             {"username": user_admin_correct["username"]},
             format="json",
         )
@@ -35,7 +35,7 @@ class TestAccounst(APITestCase):
 
     def test_if_user_cant_login_missing_username(self):
         response = self.client.post(
-            "/api/login/",
+            "/login/",
             {"password": user_admin_correct["password"]},
             format="json",
         )
@@ -44,7 +44,7 @@ class TestAccounst(APITestCase):
 
     def test_if_user_cant_login_with_wrong_password(self):
         response = self.client.post(
-            "/api/login/",
+            "/login/",
             {
                 "username": user_admin_correct["username"],
                 "password": "wordGeneratorSevenPointO",
@@ -56,7 +56,7 @@ class TestAccounst(APITestCase):
 
     def test_if_user_cant_login_with_wrong_email(self):
         response = self.client.post(
-            "/api/login/",
+            "/login/",
             {
                 "username": "highestInTheRoom",
                 "password": user_admin_correct["password"],
