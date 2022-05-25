@@ -27,7 +27,8 @@ jobs:
         pip install -r requirements.txt
     - name: Create Env
       run: |
-            echo "TEST=True\nSECRET_KEY=django-insecure-x)aw&gz(3#cc4^7d1u+it@ri*mzo)zdo9tp4payx(4wt_&4bjq" > .env
+            echo "TEST=True" > .env
+            echo "SECRET_KEY=4wt_&4bjq" >> .env
             ls -a
             cat .env
     - name: Create Migrations
