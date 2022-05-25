@@ -77,7 +77,8 @@ class TestAccountsPOST(APITestCase):
 
         # Popping one field and testing if returns correct message
         for field in data.keys():
-            data.pop(field)
+            payload = {**data}
+            payload.pop(field)
 
             response = self.client.post(self.PATH, data, format="json")
             output = response.json()
@@ -129,7 +130,6 @@ class TestAccountsPOST(APITestCase):
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, HTTP_409_CONFLICT)
-
         self.assertEqual(output, username_conflict_detail)
 
     def test_if_evaluates_email_unicity_409(self):
@@ -145,5 +145,4 @@ class TestAccountsPOST(APITestCase):
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, HTTP_409_CONFLICT)
-
         self.assertEqual(output, email_conflict_detail)
