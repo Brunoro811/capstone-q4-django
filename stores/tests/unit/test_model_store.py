@@ -1,5 +1,7 @@
 import uuid
 
+from accounts.models import AccountModel
+from accounts.tests.utils import user_admin_correct
 from django.db.models import Model
 from django.test import TestCase
 from stores.models import StoreModel
@@ -19,6 +21,9 @@ class StoreModelTest(TestCase):
 
         cls.store_object = StoreModel.objects.create(**store_correct)
 
+        cls.user_admin = AccountModel.objects.create_user(**user_admin_correct, store=cls.store_object)
+
+        cls.find_store = StoreModel.objects.get(id=cls.store_object.id)
         return super().setUpTestData()
 
     def test_model_store_fields(self):
