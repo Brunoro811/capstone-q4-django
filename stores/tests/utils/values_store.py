@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from faker import Faker
 
 fake = Faker()
@@ -10,4 +12,6 @@ store_correct = {
     'state': fake.current_country_code(),
     'other_information': '',
     'zip_code': fake.postcode(),
+    'updated_at': datetime.utcnow()
 }
+
