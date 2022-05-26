@@ -39,6 +39,12 @@ class AccountSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
     
 
-class LoginSerializer(serializers.Serializer):
+"""class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
-    password = serializers.CharField(required=True)
+    password = serializers.CharField(required=True)"""
+
+class LoginSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = AccountModel
+        fields = ('username',"password",)

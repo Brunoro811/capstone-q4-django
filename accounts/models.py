@@ -8,7 +8,7 @@ from django.utils import timezone
 class AccountModel(AbstractUser):
     
     id = models.UUIDField(primary_key=True,default=uuid4,editable=False)
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True,help_text="Email is unique.")
     last_name = models.CharField(max_length=255)
     is_seller = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
