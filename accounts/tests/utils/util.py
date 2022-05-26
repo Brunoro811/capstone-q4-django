@@ -27,8 +27,8 @@ user_admin_incorrect_email = {
 }
 
 user_seller_correct = {
-    'username': fake.user_name(),
-    'email': fake.email(),
+    'username': "seller"+fake.user_name(),
+    'email': "seller"+fake.email(),
     'password': fake.password(),
     'first_name': fake.first_name(),
     'last_name': fake.last_name(),
