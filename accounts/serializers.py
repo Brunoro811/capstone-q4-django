@@ -5,7 +5,7 @@ from accounts.models import AccountModel
 
 
 class AccountSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
     
         model = AccountModel
