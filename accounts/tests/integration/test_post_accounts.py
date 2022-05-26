@@ -1,4 +1,4 @@
-'''from accounts.models import AccountModel
+from accounts.models import AccountModel
 from accounts.tests.utils import (create_account_201_response_fields,
                                   email_conflict_detail, forbidden_details,
                                   get_admin_payload, get_seller_payload,
@@ -44,7 +44,7 @@ class TestAccountsPOST(APITestCase):
     def test_if_creates_seller_without_store_id_201(self):
 
         # Authenticating with seller credentials
-        self.client.force_authenticate(user=self.seller)
+        self.client.force_authenticate(user=self.admin)
 
         data = get_seller_payload()
 
@@ -71,8 +71,8 @@ class TestAccountsPOST(APITestCase):
         for field in data.keys():
             payload = {**data}
             payload.pop(field)
-
-            response = self.client.post(self.PATH, data, format="json")
+            
+            response = self.client.post(self.PATH, payload, format="json")
             output = response.json()
 
             self.assertEqual(response.headers["Content-Type"], "application/json")
@@ -84,16 +84,18 @@ class TestAccountsPOST(APITestCase):
 
     def test_if_evaluates_request_without_authorization_header_401(self):
 
-        self.client.credentials(HTTP_AUTHORIZATION=None)
+        self.client.credentials(HTTP_AUTHORIZATION="")
 
         data = get_seller_payload()
 
+        print(f"\n Data:{data}  ")
+
         response = self.client.post(self.PATH, data, format="json")
         output = response.json()
-
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, HTTP_401_UNAUTHORIZED)
         self.assertEqual(output, unauthorized_details)
+
 
     def test_if_seller_can_not_create_account_403(self):
 
@@ -124,6 +126,7 @@ class TestAccountsPOST(APITestCase):
         self.assertEqual(response.status_code, HTTP_409_CONFLICT)
         self.assertEqual(output, username_conflict_detail)
 
+'''
     def test_if_evaluates_email_unicity_409(self):
 
         # Authenticating with admin credentials
