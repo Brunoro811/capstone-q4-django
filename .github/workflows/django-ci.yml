@@ -26,7 +26,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Create Env
-      run: echo "TEST=True" > .env
+      run: |
+            echo "TEST=True" > .env
+            echo "SECRET_KEY=4wt_&4bjq" >> .env
+            ls -a
+            cat .env
     - name: Create Migrations
       run: python manage.py makemigrations
     - name: Run Tests

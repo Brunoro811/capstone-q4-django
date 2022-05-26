@@ -24,6 +24,9 @@ class AccountsListCreateUpdateAPIView(ListCreateAPIView,UpdateAPIView):
         self.kwargs.setdefault('pk', request.user.id)   
         return super().patch(request, *args, **kwargs)
 
+
+
+
 @api_view(http_method_names=('POST',))
 def login(request):
     
@@ -35,7 +38,7 @@ def login(request):
     )
     
     if not user:
-        return Response({'message': "Invalid credentials"}, status.HTTP_401_UNAUTHORIZED)
+        return Response({'detail': "Invalid credentials"}, status.HTTP_401_UNAUTHORIZED)
     
     token, _ = Token.objects.get_or_create(user=user)
 
