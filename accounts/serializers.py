@@ -2,6 +2,5 @@ from rest_framework import serializers
 
 
 class LoginSerializer(serializers.Serializer):
-    
-    username = serializers.CharField()
-    password = serializers.CharField()
+    username = serializers.CharField(required=True)
+    password = serializers.CharField(required=True)

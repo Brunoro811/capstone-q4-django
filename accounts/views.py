@@ -9,6 +9,9 @@ from accounts.serializers import LoginSerializer
 
 @api_view(http_method_names=('POST',))
 def login(request):
+    """
+        Usuario faz login
+    """
     
     serializer = LoginSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
