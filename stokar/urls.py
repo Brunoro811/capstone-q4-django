@@ -21,7 +21,7 @@ from rest_framework.schemas import get_schema_view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('accounts.urls'),),
-    path('docs/', include_docs_urls(title="StokarAPI"),),
+    path('docs/', include_docs_urls(title="Stokar",)),
     path('schema', get_schema_view(
         title="Stokar",
         description="Stokar is API for stock control.",
