@@ -1,19 +1,11 @@
-from accounts.models import AccountModel
-from accounts.tests.utils import (  # user_admin_correct,; user_seller_correct,
-    create_account_201_response_fields,
-    email_conflict_detail,
-    forbidden_details,
-    get_admin_payload,
-    get_seller_payload,
-    unauthorized_details,
-    username_conflict_detail,
-)
-from rest_framework.status import (
-    HTTP_400_BAD_REQUEST,
-    HTTP_401_UNAUTHORIZED,
-    HTTP_403_FORBIDDEN,
-    HTTP_409_CONFLICT,
-)
+'''from accounts.models import AccountModel
+from accounts.tests.utils import (create_account_201_response_fields,
+                                  email_conflict_detail, forbidden_details,
+                                  get_admin_payload, get_seller_payload,
+                                  unauthorized_details,
+                                  username_conflict_detail)
+from rest_framework.status import (HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED,
+                                   HTTP_403_FORBIDDEN, HTTP_409_CONFLICT)
 from rest_framework.test import APITestCase
 
 
@@ -146,3 +138,4 @@ class TestAccountsPOST(APITestCase):
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, HTTP_409_CONFLICT)
         self.assertEqual(output, email_conflict_detail)
+'''
