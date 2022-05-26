@@ -6,14 +6,16 @@ fake = Faker()
 fake.add_provider(Provider)
 fake: Provider
 
-user_admin_correct = {
-    "username": fake.user_name(),
-    "email": fake.email(),
-    "password": fake.password(),
-    "first_name": fake.first_name(),
-    "last_name": fake.last_name(),
-    "is_admin": True,
-    "is_seller": True,
+def user_admin_correct():
+
+    return{
+        "username": fake.user_name(),
+        "email": fake.email(),
+        "password": fake.password(),
+        "first_name": fake.first_name(),
+        "last_name": fake.last_name(),
+        "is_admin": True,
+        "is_seller": True,
 }
 
 user_admin_incorrect_email = {
@@ -26,7 +28,8 @@ user_admin_incorrect_email = {
     "is_seller": True,
 }
 
-user_seller_correct = {
+def user_seller_correct():
+    return {
     'username': "seller"+fake.user_name(),
     'email': "seller"+fake.email(),
     'password': fake.password(),
@@ -35,7 +38,7 @@ user_seller_correct = {
     'is_admin': False,
     'is_seller': True
 
-}
+    }
 
 user_seller_incorrect_email = {
     "username": fake.user_name(),
