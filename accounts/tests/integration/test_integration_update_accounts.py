@@ -71,11 +71,13 @@ class AccountsUpdateTest(APITestCase):
     def test_should_to_user_by_passing_the_admin_token_and_returning_code_200 (self):
         
         token = self.client.post('/login/', self.user_login_admin, format='json').json()['token']
+        
         fields_to_update = {
             "first_name": "João",
-            "last_name": "Alvaro"
+            "last_name": "Alvaro",
+            "is_seller": True,
         }
-
+        
         self.client.credentials(HTTP_AUTHORIZATION="Token "+ token)
         response = self.client.patch("/accounts/", fields_to_update ,format='json')
 
@@ -86,6 +88,8 @@ class AccountsUpdateTest(APITestCase):
         
         self.assertTrue( fields_to_update['first_name'] ,response.json()['first_name'])
         self.assertTrue( fields_to_update['last_name'] ,response.json()['last_name'])
+        self.assertTrue( fields_to_update['is_seller'] ,response.json()['is_seller'])
+        
         
     def test_should_to_user_by_passing_the_seller_token_and_returning_code_200 (self):
 
@@ -106,3 +110,55 @@ class AccountsUpdateTest(APITestCase):
     
         self.assertTrue( fields_to_update['first_name'] ,response.json()['first_name'])
         self.assertTrue( fields_to_update['last_name'] ,response.json()['last_name'])
+
+    def test_seller_should_try_to_change_unauthorized_fields_and_returns_403 (self):
+
+        token = self.client.post('/login/', self.user_login_seller , format='json').json()['token']
+
+        fields_to_update = {
+            "first_name": "João",
+            "last_name": "Alvaro",
+            "is_admin": True,
+            "is_seller": False,
+            "email": "joao@gmail.com",
+            "username": "fulaninho",
+        }
+            
+        expected_json = {
+            "detail": "seller not authorized for this action.",
+            "unauthorized_fields": [
+                "username",
+                "email",
+                "is_seller",
+                "is_admin",
+            ]
+        }
+
+        self.client.credentials(HTTP_AUTHORIZATION="Token "+ token)
+        response = self.client.patch("/accounts/", fields_to_update ,format='json')
+        
+        self.assertEqual (response.status_code, status.HTTP_403_FORBIDDEN)
+        
+        self.assertEqual ( expected_json ,response.json())
+    
+    def test_admin_try_to_update_with_wrong_type_fields_return_code_400(self):
+        
+        token = self.client.post('/login/', self.user_login_admin , format='json').json()['token']
+
+        fields_to_update = {
+            "first_name": "first_name 2",
+            "is_seller": 10
+        }
+
+        expected_json = {
+            "is_seller": [
+                "Must be a valid boolean."
+            ]
+        }
+
+        self.client.credentials(HTTP_AUTHORIZATION="Token "+ token)
+        response = self.client.patch("/accounts/", fields_to_update ,format='json')
+
+        self.assertEqual (response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual ( expected_json ,response.json())
+
