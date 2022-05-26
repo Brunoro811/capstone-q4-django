@@ -64,7 +64,7 @@ class TestAccounts(APITestCase):
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, 409)
-        self.assertIn("detail", response.json())
+        self.assertIn("username", response.json())
 
     def test_cant_update_user_by_id_if_email_already_exists(self):
         self.client.force_authenticate(user=self.admin)
@@ -75,6 +75,6 @@ class TestAccounts(APITestCase):
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, 409)
-        self.assertIn("detail", response.json())
+        self.assertIn("email", response.json())
 
 
