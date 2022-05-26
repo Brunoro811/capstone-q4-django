@@ -17,7 +17,7 @@ class TestAccounts(APITestCase):
 
         self.client.force_authenticate(user=self.admin)
 
-        response = self.client.patch(f"/accounts/{self.seller.id}", self.seller_data,format="json")
+        response = self.client.patch(f"/accounts/{self.seller.id}/", self.seller_data,format="json")
         
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, 200)
@@ -31,7 +31,7 @@ class TestAccounts(APITestCase):
         self.assertIn("created_at", response.json())
         
     def test_if_cant_update_user_by_id_without_being_logged(self):
-        response = self.client.patch(f"/accounts/{self.seller.id}", self.seller_data,format="json")
+        response = self.client.patch(f"/accounts/{self.seller.id}/", self.seller_data,format="json")
         
 
         self.assertEqual(response.status_code, 401)
@@ -40,7 +40,7 @@ class TestAccounts(APITestCase):
     def test_if_cant_update_user_by_id_as_seller(self):
         self.client.force_authenticate(user=self.seller)
 
-        response = self.client.patch(f"/accounts/{self.seller.id}", self.seller_data,format="json")
+        response = self.client.patch(f"/accounts/{self.seller.id}/", self.seller_data,format="json")
         
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, 403)
@@ -49,7 +49,7 @@ class TestAccounts(APITestCase):
     def test_if_cant_update_user_by_id_if_user_dont_exists(self):
         self.client.force_authenticate(user=self.admin)
 
-        response = self.client.patch(f"/accounts/230d81bf-2092-420a-a310-505ed9a1c243", self.seller_data, format="json")
+        response = self.client.patch(f"/accounts/230d81bf-2092-420a-a310-505ed9a1c243/", self.seller_data, format="json")
         
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, 404)
@@ -60,7 +60,7 @@ class TestAccounts(APITestCase):
 
         data = {**user_admin_correct, "username": self.admin.username}
 
-        response = self.client.patch(f"/accounts/{self.seller.id}", data, format="json")
+        response = self.client.patch(f"/accounts/{self.seller.id}/", data, format="json")
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, 409)
@@ -71,7 +71,7 @@ class TestAccounts(APITestCase):
 
         data = {**user_admin_correct, "email": self.admin.email}
 
-        response = self.client.patch(f"/accounts/{self.seller.id}", data, format="json")
+        response = self.client.patch(f"/accounts/{self.seller.id}/", data, format="json")
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, 409)
