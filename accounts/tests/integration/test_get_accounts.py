@@ -15,7 +15,7 @@ class TestAccounst(APITestCase):
         cls.test_admin = AccountModel.objects.create_user(**user_admin_correct)
         cls.test_seller = AccountModel.objects.create_user(**user_seller_correct)
 
-    def test_if_cant_get_one_user_without_authorization_header(self):
+    def test_if_cant_list_all_without_authorization_header(self):
         response = self.client.get("/accounts/", format="json")
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
@@ -25,20 +25,17 @@ class TestAccounst(APITestCase):
             response.json()["detail"], "Authentication credentials were not provided."
         )
 
-    def test_if_can_get_one_user_as_admin(self):
-        user_id = str(self.test_admin.id)
+    def test_if_can_list_all_users_with_admin_account(self):
         self.client.force_authenticate(user=self.test_admin)
-        response = self.client.get(f"/accounts/{user_id}/", format="json")
+        response = self.client.get("/accounts/", format="json")
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        for field in fields_get_one_user:
-            self.assertIn(field, response.json())
+        self.assertIsInstance(response.json(), list)
 
-    def test_if_cant_get_one_user_as_seller(self):
-        user_id = Token.objects.get(key=self.seller_token).user.id
+    def test_if_cant_list_all_users_as_seller(self):
         self.client.force_authenticate(user=self.test_seller)
-        response = self.client.get(f"/accounts/{user_id}/", format="json")
+        response = self.client.get("/accounts/", format="json")
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -47,13 +44,3 @@ class TestAccounst(APITestCase):
             response.json()["detail"],
             "You do not have permission to perform this action.",
         )
-
-    def test_if_cant_get_one_user_if_user_dont_exists(self):
-        self.client.force_authenticate(user=self.test_admin)
-        response = self.client.get(
-            "/accounts/230d81bf-2092-420a-a310-505ed9a1c243/", format="json"
-        )
-        self.assertEqual(response.headers["Content-Type"], "application/json")
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        self.assertIn("detail", response.json())
-        self.assertEqual(response.json()["detail"], "Not found.")
