@@ -9,7 +9,17 @@ class AccountSerializer(serializers.ModelSerializer):
     class Meta:
     
         model = AccountModel
-        fields = '__all__'
+        fields = (
+            "id",
+            "username",
+            "is_admin",
+            "is_seller",
+            "email",
+            "first_name",
+            "last_name",
+            "created_at",
+            "store_id",
+        )
 
         extra_kwargs = {
             'id': {'read_only': True},
@@ -29,6 +39,7 @@ class AccountSerializer(serializers.ModelSerializer):
                     })
     
     def create(self, validated_data):
+        
         return AccountModel.objects.create_user(**validated_data)
 
     def update(self, instance, validated_data):
@@ -37,9 +48,7 @@ class AccountSerializer(serializers.ModelSerializer):
             self.checking_allowed_fields_for_seller(validated_data)
 
         return super().update(instance, validated_data)
-    
 
 class LoginSerializer(serializers.Serializer):
-    
-    username = serializers.CharField()
-    password = serializers.CharField()
+    username = serializers.CharField(required=True)
+    password = serializers.CharField(required=True)
