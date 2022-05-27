@@ -1,9 +1,6 @@
 from accounts.models import AccountModel
-from accounts.tests.utils import (
-    fields_get_one_user,
-    user_admin_correct,
-    user_seller_correct,
-)
+from accounts.tests.utils import (fields_get_one_user, user_admin_correct,
+                                  user_seller_correct)
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
@@ -12,8 +9,8 @@ from rest_framework.test import APITestCase
 class TestAccounst(APITestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.test_admin = AccountModel.objects.create_user(**user_admin_correct)
-        cls.test_seller = AccountModel.objects.create_user(**user_seller_correct)
+        cls.test_admin = AccountModel.objects.create_user(**user_admin_correct())
+        cls.test_seller = AccountModel.objects.create_user(**user_seller_correct())
 
     def test_if_cant_get_one_user_without_authorization_header(self):
         user_id = str(self.test_admin.id)
