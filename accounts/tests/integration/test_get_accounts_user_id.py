@@ -37,9 +37,8 @@ class TestAccounst(APITestCase):
             self.assertIn(field, response.json())
 
     def test_if_cant_get_one_user_as_seller(self):
-        user_id = Token.objects.get(key=self.seller_token).user.id
         self.client.force_authenticate(user=self.test_seller)
-        response = self.client.get(f"/accounts/{user_id}/", format="json")
+        response = self.client.get(f"/accounts/{self.test_seller.id}/", format="json")
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
