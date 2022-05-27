@@ -1,9 +1,9 @@
 from accounts.models import AccountModel
-from accounts.tests.utils import (
-    fields_get_one_user,
-    user_admin_correct,
-    user_seller_correct,
-)
+from accounts.tests.utils import fields_get_one_user
+from accounts.tests.utils import \
+    user_admin_correct as function_user_admin_correct
+from accounts.tests.utils import \
+    user_seller_correct as function_user_seller_correct
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
@@ -12,6 +12,9 @@ from rest_framework.test import APITestCase
 class TestAccounst(APITestCase):
     @classmethod
     def setUpTestData(cls):
+        user_admin_correct = function_user_admin_correct()
+        user_seller_correct = function_user_seller_correct()
+
         cls.login_seller = {
             "username": user_seller_correct["username"],
             "password": user_seller_correct["password"],
@@ -51,7 +54,7 @@ class TestAccounst(APITestCase):
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("password", response.json())
-        self.assertIn(["This field is required."], response.json()["password"])
+        self.assertEqual(["This field is required."], response.json()["password"])
 
     def test_if_user_cant_login_missing_username_field(self):
         response = self.client.post(
