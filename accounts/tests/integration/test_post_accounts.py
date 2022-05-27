@@ -88,7 +88,6 @@ class TestAccountsPOST(APITestCase):
 
         data = get_seller_payload()
 
-        print(f"\n Data:{data}  ")
 
         response = self.client.post(self.PATH, data, format="json")
         output = response.json()
@@ -126,7 +125,8 @@ class TestAccountsPOST(APITestCase):
         self.assertEqual(response.status_code, HTTP_409_CONFLICT)
         self.assertEqual(output, username_conflict_detail)
 
-'''
+
+
     def test_if_evaluates_email_unicity_409(self):
 
         # Authenticating with admin credentials
@@ -141,4 +141,3 @@ class TestAccountsPOST(APITestCase):
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, HTTP_409_CONFLICT)
         self.assertEqual(output, email_conflict_detail)
-'''
