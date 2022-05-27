@@ -111,7 +111,38 @@ class RetrieveUpdateOneView(RetrieveUpdateAPIView):
     queryset = AccountModel.objects.all()
     lookup_url_kwarg = "user_id"
 
+    def get(self, request, *args, **kwargs):
+
+        """
+            This route is authenticated.
+
+            This route receives as a parameter a `user_id` of type UUID.
+            
+            This route returns the user or a not found message.
+        """
+
+        return super().get(request, *args, **kwargs)
+    
+    def put(self, request, *args, **kwargs):
+        """
+            # Method \"PUT\" not allowed.
+        """
+        self.serializer_class = AccountUpdateSerializer
+        return super().put(request, *args, **kwargs)
+
     def patch(self, request, *args, **kwargs):
+
+        """
+            This route is authenticated.
+            
+            Only the admin user has access.
+            
+            This route receives as a parameter a `user_id` of type UUID.
+            
+            This route returns the user or a not found message.
+            
+            This route updates the user.
+        """
 
         user_exists = self.get_queryset().filter(pk=kwargs["user_id"]).exists()
 
