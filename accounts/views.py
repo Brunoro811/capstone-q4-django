@@ -12,6 +12,33 @@ from accounts.permissions import IsAdmin, IsAuthenticatedAccounts
 from accounts.serializers import AccountSerializer, LoginSerializer
 
 
+class LoginPostView(GenericAPIView):
+    
+    serializer_class = LoginSerializer
+    queryset = AccountModel.objects
+    
+    
+    def post(self, request, *args, **kwargs):
+        """
+            Usuario faz login
+            
+        """
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        user = authenticate(
+            username=serializer.validated_data['username'],
+            password=serializer.validated_data['password']
+        )
+        
+        if not user:
+            return Response({'detail': "Invalid credentials"}, status.HTTP_401_UNAUTHORIZED)
+        
+        token, _ = Token.objects.get_or_create(user=user)
+
+        return Response({'token': token.key},status.HTTP_200_OK)
+
+
 class AccountsListCreateUpdateAPIView(ListCreateAPIView,UpdateAPIView):
     
     authentication_classes = [TokenAuthentication]
