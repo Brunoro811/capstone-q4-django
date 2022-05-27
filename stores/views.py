@@ -16,7 +16,11 @@ class ListCreateStores(generics.ListCreateAPIView):
 
     def post(self, request, *args, **kwargs):
         """
-        Create a store
+        This route is authenticated.
+        
+        Only an admin user can access.
+        
+        This route create a store.
         """
         store = (
             StoreModel.objects.filter(name=self.request.data["name"]).exists()
@@ -27,6 +31,10 @@ class ListCreateStores(generics.ListCreateAPIView):
 
     def get(self, request, *args, **kwargs):
         """
-        Get list of all stores
+        This route is authenticated.
+        
+        Only an admin user can access.
+        
+        This route lists all stores.
         """
         return super().get(request, *args, **kwargs)
