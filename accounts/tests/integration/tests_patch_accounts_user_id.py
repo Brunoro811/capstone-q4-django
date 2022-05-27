@@ -8,10 +8,10 @@ from rest_framework.test import APITestCase
 class TestAccounts(APITestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.seller_data = user_seller_correct
+        cls.seller_data = user_seller_correct()
         cls.seller: AccountModel = AccountModel.objects.create(**cls.seller_data)
 
-        cls.admin_data = user_admin_correct
+        cls.admin_data = user_admin_correct()
         cls.admin: AccountModel = AccountModel.objects.create(**cls.admin_data)
 
     def test_if_can_update_user_by_id_as_admin(self):
