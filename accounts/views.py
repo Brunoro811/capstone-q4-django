@@ -2,27 +2,21 @@ from django.contrib.auth import authenticate
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
-
 from rest_framework.generics import (GenericAPIView, ListCreateAPIView,
-                                     UpdateAPIView,RetrieveUpdateAPIView)
-
+                                     RetrieveUpdateAPIView, UpdateAPIView)
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from accounts.exceptions import UserAlreadyExistsException
+from accounts.exceptions import (AlreadyRegisteredEmailError,
+                                 AlreadyRegisteredUsernameError,
+                                 UserAlreadyExistsException)
 from accounts.models import AccountModel
-from accounts.permissions import IsAdmin, IsAuthenticatedAccounts
-from accounts.serializers import AccountSerializer, LoginSerializer,RetrieveUpdateOneSerializer
+from accounts.permissions import (IsAdmin, IsAuthenticatedAccounts,
+                                  RetrieveUpdateOneAuthenticatePermission,
+                                  RetrieveUpdateOneAuthorizePermission)
+from accounts.serializers import (AccountSerializer, LoginSerializer,
+                                  RetrieveUpdateOneSerializer)
 
-from accounts.exceptions import (
-    AlreadyRegisteredEmailError,
-    AlreadyRegisteredUsernameError,
-)
-from accounts.models import AccountModel
-from accounts.permissions import (
-    RetrieveUpdateOneAuthenticatePermission,
-    RetrieveUpdateOneAuthorizePermission,
-)
 
 class AccountsListCreateUpdateAPIView(ListCreateAPIView,UpdateAPIView):
     
@@ -86,7 +80,7 @@ class LoginPostView(GenericAPIView):
         )
         
         if not user:
-            return Response({'detail': "Invalid credentials"}, status.HTTP_401_UNAUTHORIZED)
+            return Response({'detail': "Invalid credentials."}, status.HTTP_401_UNAUTHORIZED)
         
         token, _ = Token.objects.get_or_create(user=user)
 

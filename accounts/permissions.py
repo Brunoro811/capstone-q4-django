@@ -1,10 +1,8 @@
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.request import Request
+from stokar.permissions import (GenericAuthenticatedPermission,
+                                GenericAuthorizedPermission)
 
-from stokar.permissions import (
-    GenericAuthenticatedPermission,
-    GenericAuthorizedPermission,
-)
 
 class IsAuthenticatedAccounts(IsAuthenticated):
     
@@ -18,7 +16,7 @@ class IsAuthenticatedAccounts(IsAuthenticated):
 class IsAdmin(BasePermission):
     
     def has_permission(self, request, _):
-        restrict_methods = ('POST',)
+        restrict_methods = ('POST','GET',)
         if request.method in restrict_methods and (
             not request.user.is_admin
         ):
