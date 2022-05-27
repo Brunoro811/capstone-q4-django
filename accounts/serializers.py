@@ -19,6 +19,7 @@ class AccountSerializer(serializers.ModelSerializer):
             "last_name",
             "created_at",
             "store_id",
+            "password"
         )
 
         extra_kwargs = {
