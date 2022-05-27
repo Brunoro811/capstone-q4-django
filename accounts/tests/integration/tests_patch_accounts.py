@@ -8,22 +8,27 @@ class AccountsUpdateTest(APITestCase):
     
     @classmethod
     def setUpTestData(cls) -> None:
+        
+        # fields of user admin
+        cls.user_admin_correct = user_admin_correct()
 
-
-        cls.username_admin = user_admin_correct['username']
-        cls.password_admin = user_admin_correct['password']
+        cls.username_admin = cls.user_admin_correct['username']
+        cls.password_admin = cls.user_admin_correct['password']
         cls.user_admin = AccountModel.objects.create_user(
-            **user_admin_correct
+            **cls.user_admin_correct
         )
         cls.user_login_admin = {
             "username":cls.username_admin,
             "password" : cls.password_admin
         }
 
-        cls.username_seller = user_seller_correct['username']
-        cls.password_seller = user_seller_correct['password']
+        # fields of user seller
+        cls.user_seller_correct = user_seller_correct()
+
+        cls.username_seller = cls.user_seller_correct['username']
+        cls.password_seller = cls.user_seller_correct['password']
         cls.user_seller = AccountModel.objects.create_user(
-            **user_seller_correct
+            **cls.user_seller_correct
         )
         cls.user_login_seller = {
             'username': cls.username_seller,
@@ -77,7 +82,7 @@ class AccountsUpdateTest(APITestCase):
             "last_name": "Alvaro",
             "is_seller": True,
         }
-        
+         
         self.client.credentials(HTTP_AUTHORIZATION="Token "+ token)
         response = self.client.patch("/accounts/", fields_to_update ,format='json')
 
@@ -126,20 +131,22 @@ class AccountsUpdateTest(APITestCase):
             
         expected_json = {
             "detail": "seller not authorized for this action.",
-            "unauthorized_fields": [
+            "unauthorized_fields": set([
                 "username",
                 "email",
                 "is_seller",
                 "is_admin",
-            ]
+            ])
         }
 
         self.client.credentials(HTTP_AUTHORIZATION="Token "+ token)
         response = self.client.patch("/accounts/", fields_to_update ,format='json')
-        
+        output = response.json()
+        output['unauthorized_fields'] = set(output['unauthorized_fields'])
         self.assertEqual (response.status_code, status.HTTP_403_FORBIDDEN)
         
-        self.assertEqual ( expected_json ,response.json())
+        self.assertEqual( expected_json , output)
+        
     
     def test_admin_try_to_update_with_wrong_type_fields_return_code_400(self):
         
