@@ -6,6 +6,10 @@ from rest_framework.decorators import api_view
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.response import Response
 
+from accounts.exceptions import (
+    AlreadyRegisteredEmailError,
+    AlreadyRegisteredUsernameError,
+)
 from accounts.models import AccountModel
 from accounts.permissions import (
     RetrieveUpdateOneAuthenticatePermission,
@@ -41,3 +45,37 @@ class RetrieveUpdateOneView(RetrieveUpdateAPIView):
     serializer_class = RetrieveUpdateOneSerializer
     queryset = AccountModel.objects.all()
     lookup_url_kwarg = "user_id"
+
+    def patch(self, request, *args, **kwargs):
+
+        user_exists = self.get_queryset().filter(pk=kwargs["user_id"]).exists()
+
+        if user_exists:
+            email = (
+                self.get_queryset()
+                .exclude(pk=kwargs["user_id"])
+                .filter(email__iexact=request.data["email"])
+                .exists()
+                if request.data.get("email")
+                else False
+            )
+
+            if email:
+                raise AlreadyRegisteredEmailError()
+
+            username = (
+                self.get_queryset()
+                .exclude(pk=kwargs["user_id"])
+                .filter(username__iexact=request.data["username"])
+                .exists()
+                if request.data.get("username")
+                else False
+            )
+
+            if username:
+                raise AlreadyRegisteredUsernameError()
+
+        return super().patch(request, *args, **kwargs)
+
+    def handle_exception(self, exc):
+        return super().handle_exception(exc)
