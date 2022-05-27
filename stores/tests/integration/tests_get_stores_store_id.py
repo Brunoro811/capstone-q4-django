@@ -1,5 +1,6 @@
 from accounts.models import AccountModel
 from accounts.tests.utils import user_admin_correct, user_seller_correct
+from accounts.tests.utils.util import get_admin_payload, get_seller_payload
 from rest_framework.test import APITestCase
 from stores.models import StoreModel
 from stores.tests.utils import (get_store_by_id_200_response_fields,
@@ -13,10 +14,10 @@ class TestStores(APITestCase):
         cls.store_data = store_correct
         cls.store = StoreModel.objects.create(**cls.store_data)
 
-        cls.seller_data = user_seller_correct
+        cls.seller_data = get_seller_payload()
         cls.seller = AccountModel.objects.create(**cls.seller_data)
 
-        cls.admin_data = user_admin_correct
+        cls.admin_data = get_admin_payload()
         cls.admin = AccountModel.objects.create(**cls.admin_data)
 
     def test_if_cant_get_one_store_without_being_logged(self):
