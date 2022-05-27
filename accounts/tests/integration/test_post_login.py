@@ -78,7 +78,7 @@ class TestAccounst(APITestCase):
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertIn("detail", response.json())
-        self.assertEqual(response.json()["details"], "Invalid credentials.")
+        self.assertEqual(response.json()["detail"], "Invalid credentials.")
 
     def test_if_user_cant_login_with_wrong_username(self):
         response = self.client.post(
