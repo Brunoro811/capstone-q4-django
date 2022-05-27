@@ -1,5 +1,5 @@
+from rest_framework import status
 from rest_framework.exceptions import APIException
-
 
 class SellerNotAuthorizedForThisActionException(APIException):
     status_code = 403
@@ -16,3 +16,15 @@ class UserAlreadyExistsException(APIException):
     def __init__(self, detail= default_detail , code= status_code):
         self.status_code = code
         super().__init__(detail, code)
+
+class ConflictError(APIException):
+    status_code = status.HTTP_409_CONFLICT
+    default_code = "conflict"
+
+
+class AlreadyRegisteredEmailError(ConflictError):
+    default_detail = {"email": ["user with this email already exists."]}
+
+
+class AlreadyRegisteredUsernameError(ConflictError):
+    default_detail = {"username": ["user with this username already exists."]}

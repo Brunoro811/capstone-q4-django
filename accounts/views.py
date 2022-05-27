@@ -4,14 +4,18 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.generics import (GenericAPIView, ListCreateAPIView,
-                                     UpdateAPIView)
+                                     RetrieveUpdateAPIView, UpdateAPIView)
 from rest_framework.response import Response
 
-from accounts.exceptions import UserAlreadyExistsException
+from accounts.exceptions import (AlreadyRegisteredEmailError,
+                                 AlreadyRegisteredUsernameError,
+                                 UserAlreadyExistsException)
 from accounts.models import AccountModel
-from accounts.permissions import IsAdmin, IsAuthenticatedAccounts
+from accounts.permissions import (IsAdmin, IsAuthenticatedAccounts,
+                                  RetrieveUpdateOneAuthenticatePermission,
+                                  RetrieveUpdateOneAuthorizePermission)
 from accounts.serializers import (AccountSerializer, AccountUpdateSerializer,
-                                  LoginSerializer)
+                                  LoginSerializer, RetrieveUpdateOneSerializer)
 
 
 class AccountsListCreateUpdateAPIView(ListCreateAPIView,UpdateAPIView):
@@ -89,9 +93,55 @@ class LoginPostView(GenericAPIView):
         )
         
         if not user:
-            return Response({'detail': "Invalid credentials"}, status.HTTP_401_UNAUTHORIZED)
+            return Response({'detail': "Invalid credentials."}, status.HTTP_401_UNAUTHORIZED)
         
         token, _ = Token.objects.get_or_create(user=user)
 
         return Response({'token': token.key},status.HTTP_200_OK)
-        
+       
+
+
+class RetrieveUpdateOneView(RetrieveUpdateAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [
+        RetrieveUpdateOneAuthenticatePermission,
+        RetrieveUpdateOneAuthorizePermission,
+    ]
+    serializer_class = RetrieveUpdateOneSerializer
+    queryset = AccountModel.objects.all()
+    lookup_url_kwarg = "user_id"
+
+    def patch(self, request, *args, **kwargs):
+
+        user_exists = self.get_queryset().filter(pk=kwargs["user_id"]).exists()
+
+        if user_exists:
+            email = (
+                self.get_queryset()
+                .exclude(pk=kwargs["user_id"])
+                .filter(email__iexact=request.data["email"])
+                .exists()
+                if request.data.get("email")
+                else False
+            )
+
+            if email:
+                raise AlreadyRegisteredEmailError()
+
+            username = (
+                self.get_queryset()
+                .exclude(pk=kwargs["user_id"])
+                .filter(username__iexact=request.data["username"])
+                .exists()
+                if request.data.get("username")
+                else False
+            )
+
+            if username:
+                raise AlreadyRegisteredUsernameError()
+
+        return super().patch(request, *args, **kwargs)
+
+    def handle_exception(self, exc):
+        return super().handle_exception(exc)
+
