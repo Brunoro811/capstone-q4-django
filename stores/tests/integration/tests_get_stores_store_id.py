@@ -47,9 +47,9 @@ class TestStores(APITestCase):
         self.assertIn("detail", response.json())
 
     def test_if_cant_get_one_store_if_store_dont_exists(self):
-        self.client.credentials(HTTP_AUTHORIZATION="Token " + self.admin_token)
+        self.client.force_authenticate(user=self.admin)
         response = self.client.get(
-            "/stores/230d81bf-2092-420a-a310-505ed9a1c243/", format="json"
+            "/stores/230d81bf-2092-420a-a310-505ed9a1c243", format="json"
         )
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
