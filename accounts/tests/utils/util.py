@@ -46,6 +46,16 @@ user_seller_incorrect_email = {
     "is_seller": True,
 }
 
+fields_get_one_user = [
+    "id",
+    "username",
+    "email",
+    "is_admin",
+    "is_seller",
+    "first_name",
+    "last_name",
+    "created_at",
+]
 unauthorized_details = {"detail": "Authentication credentials were not provided."}
 
 forbidden_details = {"detail": "You do not have permission to perform this action."}
