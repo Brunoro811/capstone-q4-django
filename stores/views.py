@@ -23,7 +23,7 @@ class ListCreateStores(generics.ListCreateAPIView):
         This route create a store.
         """
         store = (
-            StoreModel.objects.filter(name=self.request.data["name"]).exists()
+            StoreModel.objects.filter(name=self.request.get("name")).exists()
         )
         if store:
             raise StoreNameAlreadyExists
