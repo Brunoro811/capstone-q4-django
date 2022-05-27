@@ -1,7 +1,8 @@
 import random
 
 from accounts.models import AccountModel
-from accounts.tests.utils import user_admin_correct, user_seller_correct
+from accounts.tests.utils import user_admin_correct as function_user_admin_correct
+from accounts.tests.utils import user_seller_correct as function_user_seller_correct
 from rest_framework import status
 from rest_framework.test import APITestCase
 from stores.tests.utils import (
@@ -14,6 +15,8 @@ from stores.tests.utils import (
 class TestStore(APITestCase):
     @classmethod
     def setUpTestData(cls):
+        user_admin_correct = function_user_admin_correct()
+        user_seller_correct = function_user_seller_correct()
         cls.test_admin = AccountModel.objects.create_user(**user_admin_correct)
         cls.test_seller = AccountModel.objects.create_user(**user_seller_correct)
 
@@ -53,7 +56,7 @@ class TestStore(APITestCase):
         self.client.force_authenticate(user=self.test_admin)
         self.client.post("/stores/", store_success, format="json")
         response = self.client.post("/stores/", store_success, format="json")
-        
+
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, status.HTTP_409_CONFLICT)
         self.assertIn("name", response.json())
