@@ -6,11 +6,11 @@ fake = Faker()
 fake.add_provider(Provider)
 fake: Provider
 
-def user_admin_correct():
 
-    return{
-        "username": fake.user_name(),
-        "email": fake.email(),
+def user_admin_correct():
+    return {
+        "username": fake.unique.user_name(),
+        "email": fake.unique.email(),
         "password": fake.password(),
         "first_name": fake.first_name(),
         "last_name": fake.last_name(),
@@ -19,8 +19,8 @@ def user_admin_correct():
 }
 
 user_admin_incorrect_email = {
-    "username": fake.user_name(),
-    "email": fake.email(),
+    "username": fake.unique.user_name(),
+    "email": fake.unique.email(),
     "password": fake.password(),
     "first_name": fake.first_name(),
     "last_name": fake.last_name(),
@@ -30,8 +30,8 @@ user_admin_incorrect_email = {
 
 def user_seller_correct():
     return {
-    'username': "seller"+fake.user_name(),
-    'email': "seller"+fake.email(),
+    'username': fake.unique.user_name(),
+    'email': fake.unique.email(),
     'password': fake.password(),
     'first_name': fake.first_name(),
     'last_name': fake.last_name(),
@@ -73,8 +73,8 @@ create_account_201_response_fields = (
 
 def get_admin_payload():
     return {
-        "username": fake.user_name(),
-        "email": fake.email(),
+        "username": fake.unique.user_name(),
+        "email": fake.unique.email(),
         "password": fake.password(),
         "first_name": fake.first_name(),
         "last_name": fake.last_name(),
@@ -85,8 +85,8 @@ def get_admin_payload():
 
 def get_seller_payload():
     return {
-        "username": fake.user_name(),
-        "email": fake.email(),
+        "username": fake.unique.user_name(),
+        "email": fake.unique.email(),
         "password": fake.password(),
         "first_name": fake.first_name(),
         "last_name": fake.last_name(),
