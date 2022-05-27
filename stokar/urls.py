@@ -15,9 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from rest_framework.documentation import include_docs_urls
+from rest_framework.schemas import get_schema_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('accounts.urls')),
-    path('', include('stores.urls'))
+    path('docs/', include_docs_urls(title="Stokar API Documentation",description="v1.0",)),
+    path('', include('stores.urls')),
+    path('', include('accounts.urls'),),
+    path('schema', get_schema_view(
+        title="Stokar",
+        description="Stokar is API for stock control.",
+        version="1.0.0"
+    ), name='openapi-schema'),
 ]
