@@ -1,3 +1,4 @@
+import django
 from rest_framework import generics, status
 from rest_framework.authentication import TokenAuthentication
 
@@ -17,7 +18,9 @@ class ListCreateStores(generics.ListCreateAPIView):
         """
         Create a store
         """
-        store = StoreModel.objects.filter(name=self.request.data["name"]).first()
+        store = (
+            StoreModel.objects.filter(name=self.request.data["name"]).exists()
+        )
         if store:
             raise StoreNameAlreadyExists
         return super().post(request, *args, **kwargs)
