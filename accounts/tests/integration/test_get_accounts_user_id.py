@@ -16,7 +16,8 @@ class TestAccounst(APITestCase):
         cls.test_seller = AccountModel.objects.create_user(**user_seller_correct)
 
     def test_if_cant_get_one_user_without_authorization_header(self):
-        response = self.client.get("/accounts/", format="json")
+        user_id = str(self.test_admin.id)
+        response = self.client.get(f"/accounts/{user_id}/", format="json")
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
