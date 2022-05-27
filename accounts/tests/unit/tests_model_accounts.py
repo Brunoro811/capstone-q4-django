@@ -14,18 +14,20 @@ class AccountsModelTest(TestCase):
 
     @classmethod
     def setUpTestData(cls) -> None:
+        
+        cls.user_admin_correct = user_admin_correct()
 
-        cls.username = user_admin_correct['username']
-        cls.email = user_admin_correct['email']
-        cls.password = user_admin_correct['password']
-        cls.is_admin = user_admin_correct['is_admin']
-        cls.is_seller = user_admin_correct['is_seller']
-        cls.first_name = user_admin_correct['first_name']
-        cls.last_name = user_admin_correct['last_name']
+        cls.username = cls.user_admin_correct['username']
+        cls.email = cls.user_admin_correct['email']
+        cls.password = cls.user_admin_correct['password']
+        cls.is_admin = cls.user_admin_correct['is_admin']
+        cls.is_seller = cls.user_admin_correct['is_seller']
+        cls.first_name = cls.user_admin_correct['first_name']
+        cls.last_name = cls.user_admin_correct['last_name']
 
         cls.store_object = StoreModel.objects.create(**store_correct)
         
-        cls.user_admin_correct_object = AccountModel.objects.create_user(**user_admin_correct, store=cls.store_object)
+        cls.user_admin_correct_object = AccountModel.objects.create_user(**cls.user_admin_correct, store=cls.store_object)
         
         return super().setUpTestData()
     

@@ -1,9 +1,6 @@
 from accounts.models import AccountModel
-from accounts.tests.utils import (
-    fields_get_one_user,
-    user_admin_correct,
-    user_seller_correct,
-)
+from accounts.tests.utils import (fields_get_one_user, user_admin_correct,
+                                  user_seller_correct)
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
@@ -12,8 +9,8 @@ from rest_framework.test import APITestCase
 class TestAccounst(APITestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.test_admin = AccountModel.objects.create_user(**user_admin_correct)
-        cls.test_seller = AccountModel.objects.create_user(**user_seller_correct)
+        cls.test_admin = AccountModel.objects.create_user(**user_admin_correct())
+        cls.test_seller = AccountModel.objects.create_user(**user_seller_correct())
 
     def test_if_cant_get_one_user_without_authorization_header(self):
         user_id = str(self.test_admin.id)
@@ -37,9 +34,8 @@ class TestAccounst(APITestCase):
             self.assertIn(field, response.json())
 
     def test_if_cant_get_one_user_as_seller(self):
-        user_id = Token.objects.get(key=self.seller_token).user.id
         self.client.force_authenticate(user=self.test_seller)
-        response = self.client.get(f"/accounts/{user_id}/", format="json")
+        response = self.client.get(f"/accounts/{self.test_seller.id}/", format="json")
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
