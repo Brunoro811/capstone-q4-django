@@ -33,11 +33,7 @@ class AccountSerializer(serializers.ModelSerializer):
             'email': {"help_text": "Unique. Field must be a valid email."},
             'first_name': {"help_text": "Maximum field length 150 characters."},
             'last_name': {"help_text": "Maximum field length 255 characters."},
-            'username': {"help_text": "Unique. 150 characters or fewer. Letters, digits and @/./+/-/_ only."},
-            
-            
-            
-            
+            'username': {"help_text": "Unique. 150 characters or fewer. Letters, digits and @/./+/-/_ only."},  
         }
 
     def checking_allowed_fields_for_seller(self,validated_data):
@@ -129,7 +125,19 @@ class RetrieveUpdateOneSerializer(serializers.ModelSerializer):
             "store_id",
         ]
         read_only_fields = ["id", "created_at"]
-        extra_kwargs = {"password": {"write_only": True}}
+        extra_kwargs = {
+            'id': {'read_only': True},
+            'password' : {
+                            'write_only': True,
+                            'help_text': 'Unrestricted string field'
+                        },
+            'is_admin': {"help_text": "Fields is boolean."},
+            'is_seller': {"help_text": "Fields is boolean."},
+            'email': {"help_text": "Unique. Field must be a valid email."},
+            'first_name': {"help_text": "Maximum field length 150 characters."},
+            'last_name': {"help_text": "Maximum field length 255 characters."},
+            'username': {"help_text": "Unique. 150 characters or fewer. Letters, digits and @/./+/-/_ only."},  
+        }
 
     def update(self, instance, validated_data):
         to_update_pass = validated_data.pop("password", None)
