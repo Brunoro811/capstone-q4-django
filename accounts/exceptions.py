@@ -8,3 +8,11 @@ class SellerNotAuthorizedForThisActionException(APIException):
     def __init__(self, detail= default_detail , code= status_code):
         self.status_code = code
         super().__init__(detail, code)
+
+class UserAlreadyExistsException(APIException):
+    status_code = 409
+    default_detail = "A user with such a field already exists."
+
+    def __init__(self, detail= default_detail , code= status_code):
+        self.status_code = code
+        super().__init__(detail, code)
