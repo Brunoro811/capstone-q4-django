@@ -2,15 +2,16 @@ from django.contrib.auth import authenticate
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
+from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.generics import (GenericAPIView, ListCreateAPIView,
                                      UpdateAPIView)
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from accounts.exceptions import UserAlreadyExistsException
 from accounts.models import AccountModel
 from accounts.permissions import IsAdmin, IsAuthenticatedAccounts
-from accounts.serializers import AccountSerializer, LoginSerializer
+from accounts.serializers import (AccountSerializer, AccountUpdateSerializer,
+                                  LoginSerializer)
 
 
 class AccountsListCreateUpdateAPIView(ListCreateAPIView,UpdateAPIView):
@@ -33,16 +34,29 @@ class AccountsListCreateUpdateAPIView(ListCreateAPIView,UpdateAPIView):
         
         if message_already_exists_error:
             raise UserAlreadyExistsException(detail=message_already_exists_error[0])
-        
+    
+    def put(self, request, *args, **kwargs):
+        """
+            # Method \"PUT\" not allowed.
+        """
+        self.serializer_class = AccountUpdateSerializer
+        raise MethodNotAllowed(method="PUT")
         
 
     def patch(self, request, *args, **kwargs):
+        """
+            This route is authenticated.
+            All fields are optional.
+            Seller User can change : 'password', 'first_name' and 'last_name'.
+            Admin user can change : 'email','username','password','is_seller', 'first_name', 'last_name' and 'store_id'.
+        """
         
+        self.serializer_class = AccountUpdateSerializer
         self.kwargs.setdefault('pk', request.user.id)   
         return super().patch(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
-
+        
         # these fields are unique
         restrict_unique_fields = ('username','email',)
         dict_fields = {}
