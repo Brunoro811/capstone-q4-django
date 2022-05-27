@@ -1,8 +1,8 @@
 from django.urls import path
 
-from accounts.views import AccountsListCreateUpdateAPIView, login
+from accounts.views import AccountsListCreateUpdateAPIView, LoginPostView
 
 urlpatterns = [
     path('accounts/', AccountsListCreateUpdateAPIView.as_view()),
-    path('login/', login),
+    path('login/', LoginPostView.as_view()),
 ]
