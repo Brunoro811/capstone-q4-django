@@ -1,5 +1,3 @@
-from os import stat
-
 from accounts.models import AccountModel
 from accounts.tests.utils import user_admin_correct, user_seller_correct
 from rest_framework import status
