@@ -1,4 +1,5 @@
 from accounts.tests.utils.util import (
+    fields_get_one_user,
     create_account_201_response_fields,
     email_conflict_detail,
     forbidden_details,
