@@ -12,7 +12,7 @@ store_correct = {
     "state": fake.current_country_code(),
     "other_information": "",
     "zip_code": fake.postcode(),
-    "updated_at": datetime.now(),
+    #"updated_at": datetime.now(),
 }
 
 store_success = {
