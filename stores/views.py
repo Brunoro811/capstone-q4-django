@@ -3,19 +3,12 @@ from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.generics import RetrieveUpdateAPIView
 
-from stores.exception import (
-    StoreIsAlreadyActive,
-    StoreIsAlreadyDeactivated,
-    StoreNameAlreadyExists,
-)
+from stores.exception import (StoreIsAlreadyActive, StoreIsAlreadyDeactivated,
+                              StoreNameAlreadyExists)
 from stores.models import StoreModel
 from stores.permissions import IsAdmin, StoreByIdViewPermission
-from stores.serializers import (
-    ActivateDeactivateStoreSerializer,
-    StoreModelByIdSerializer,
-    StoreModelSerializer,
-    StoreModelUpdateSerializer,
-)
+from stores.serializers import (ActivateDeactivateStoreSerializer,
+                                StoreModelByIdSerializer, StoreModelSerializer)
 
 
 class ListCreateStores(generics.ListCreateAPIView):
@@ -100,7 +93,7 @@ class StoreByIdView(RetrieveUpdateAPIView):
     lookup_url_kwarg = "store_id"
 
     def patch(self, request, *args, **kwargs):
-        self.serializer_class = StoreModelUpdateSerializer
+        self.serializer_class = StoreModelSerializer
         store = StoreModel.objects.filter(name=self.request.data.get("name")).exists()
         if store:
             raise StoreNameAlreadyExists

@@ -18,15 +18,17 @@ from django.urls import include, path
 from rest_framework.documentation import include_docs_urls
 from rest_framework.schemas import get_schema_view
 
+from .view import Home
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('docs/', include_docs_urls(title="Stokar API Documentation",description="v1.0",)),
+    path('', Home.as_view()),
+    path('docs/', include_docs_urls(
+        title="Stokar API Documentation",
+        description="This documentation has all the endpoints, parameters and information about authenticated routes for this api v0.1",
+        )),
     path('', include('stores.urls')),
     path('', include('accounts.urls'),),
-    path('schema', get_schema_view(
-        title="Stokar",
-        description="Stokar is API for stock control.",
-        version="1.0.0"
-    ), name='openapi-schema'),
+   
 ]
 

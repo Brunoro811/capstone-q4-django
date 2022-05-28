@@ -22,7 +22,7 @@ class StoreModelTest(TestCase):
         cls.other_information = store_correct['other_information']
         
         cls.store_object = StoreModel.objects.create(**store_correct)
-        cls.user_admin = AccountModel.objects.create_user(**user_admin_correct(), store=cls.store_object)
+        cls.user_admin = AccountModel.objects.create_user(**user_admin_correct(), store_id=cls.store_object)
         
         return super().setUpTestData()
 
