@@ -8,8 +8,7 @@ from stores.exception import (StoreIsAlreadyActive, StoreIsAlreadyDeactivated,
 from stores.models import StoreModel
 from stores.permissions import IsAdmin, StoreByIdViewPermission
 from stores.serializers import (ActivateDeactivateStoreSerializer,
-                                StoreModelByIdSerializer, StoreModelSerializer,
-                                StoreModelUpdateSerializer)
+                                StoreModelByIdSerializer, StoreModelSerializer)
 
 
 class ListCreateStores(generics.ListCreateAPIView):
