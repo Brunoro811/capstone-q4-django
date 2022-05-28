@@ -1,16 +1,18 @@
+from uuid import uuid4
+
 from accounts.models import AccountModel
 from accounts.tests.utils.util import get_admin_payload, get_seller_payload
 from rest_framework.test import APITestCase
 from stores.models import StoreModel
 from stores.tests.utils import (get_store_by_id_200_response_fields,
-                                store_correct)
+                                get_store_payload)
 
 
 class TestStores(APITestCase):
 
     @classmethod
     def setUpTestData(cls):
-        cls.store_data = store_correct
+        cls.store_data = get_store_payload()
         cls.store = StoreModel.objects.create(**cls.store_data)
 
         cls.seller_data = get_seller_payload()
@@ -20,7 +22,7 @@ class TestStores(APITestCase):
         cls.admin = AccountModel.objects.create(**cls.admin_data)
 
     def test_if_cant_get_one_store_without_being_logged(self):
-        response = self.client.get(f"/stores/{self.store.id}", format="json")
+        response = self.client.get(f"/stores/{self.store.id}/", format="json")
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, 401)
@@ -29,7 +31,7 @@ class TestStores(APITestCase):
     def test_if_can_get_one_store_as_admin(self):
         self.client.force_authenticate(user=self.admin)
 
-        response = self.client.get(f"/stores/{self.store.id}", format="json")
+        response = self.client.get(f"/stores/{self.store.id}/", format="json")
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, 200)
@@ -40,7 +42,7 @@ class TestStores(APITestCase):
     def test_if_cant_get_one_store_as_seller(self):
         self.client.force_authenticate(user=self.seller)
 
-        response = self.client.get(f"/stores/{self.store.id}", format="json")
+        response = self.client.get(f"/stores/{self.store.id}/", format="json")
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, 403)
@@ -49,7 +51,7 @@ class TestStores(APITestCase):
     def test_if_cant_get_one_store_if_store_dont_exists(self):
         self.client.force_authenticate(user=self.admin)
         response = self.client.get(
-            "/stores/230d81bf-2092-420a-a310-505ed9a1c243", format="json"
+            f"/stores/{uuid4()}/", format="json"
         )
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
