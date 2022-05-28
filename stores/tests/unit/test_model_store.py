@@ -13,8 +13,6 @@ class StoreModelTest(TestCase):
     
     @classmethod
     def setUpTestData(cls) -> None:
-        cls.updated_at_no_timezone = store_correct['updated_at']
-        store_correct['updated_at'] = "{}".format(store_correct['updated_at'].isoformat() + 'Z')
         
         cls.name = store_correct['name']
         cls.street = store_correct['street']    
@@ -49,10 +47,5 @@ class StoreModelTest(TestCase):
 
         self.assertIsInstance(self.other_information, str)
         self.assertEqual(self.other_information, self.store_object.other_information)
-        
-        
-        self.assertIsInstance(self.updated_at_no_timezone, datetime)
-        self.assertIsInstance(self.store_object.updated_at, str)
-        self.assertEqual(self.updated_at_no_timezone.isoformat() +'Z' , self.store_object.updated_at)
 
         self.assertIsInstance(self.store_object, Model)

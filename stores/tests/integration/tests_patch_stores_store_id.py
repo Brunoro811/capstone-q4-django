@@ -1,26 +1,20 @@
+from uuid import uuid4
+
 from accounts.models import AccountModel
 from accounts.tests.utils import get_admin_payload, get_seller_payload
-from rest_framework.status import (
-    HTTP_200_OK,
-    HTTP_401_UNAUTHORIZED,
-    HTTP_403_FORBIDDEN,
-    HTTP_404_NOT_FOUND,
-    HTTP_409_CONFLICT,
-)
+from rest_framework.status import (HTTP_200_OK, HTTP_401_UNAUTHORIZED,
+                                   HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND,
+                                   HTTP_409_CONFLICT)
 from rest_framework.test import APITestCase
 from stores.models import StoreModel
-from stores.tests.utils import (
-    forbidden_details,
-    get_store_payload,
-    not_found_details,
-    store_name_conflict_detais,
-    unauthorized_details,
-    update_store_200_response_fields,
-)
+from stores.tests.utils import (forbidden_details, get_store_payload,
+                                not_found_details, store_name_conflict_detais,
+                                unauthorized_details,
+                                update_store_200_response_fields)
 
 
 class TestStorePATCH(APITestCase):
-    PATH = "/stores/"
+    PATH = "/stores"
 
     @classmethod
     def setUpTestData(cls) -> None:
@@ -35,7 +29,6 @@ class TestStorePATCH(APITestCase):
         # Creating store
         cls.store_data = get_store_payload()
         cls.store: StoreModel = StoreModel.objects.create(**cls.store_data)
-
     def test_if_updates_correctly_200(self):
         # Authenticating with admin credentials
         self.client.force_authenticate(user=self.admin)
@@ -45,10 +38,11 @@ class TestStorePATCH(APITestCase):
         # Checking individualy if the updatable fields may be updated
         for field, value in data.items():
             payload = {field: value}
-
+            
             response = self.client.patch(
-                f"{self.PATH}/{self.store.id}", payload, format="json"
+                f"{self.PATH}/{self.store.id}/", payload, format="json"
             )
+            
             output = response.json()
 
             self.assertEqual(response.headers["Content-Type"], "application/json")
@@ -67,7 +61,7 @@ class TestStorePATCH(APITestCase):
         data = get_store_payload()
 
         response = self.client.patch(
-            f"{self.PATH}/{self.store.id}", data, format="json"
+            f"{self.PATH}/{self.store.id}/", data, format="json"
         )
         output = response.json()
         self.assertEqual(response.headers["Content-Type"], "application/json")
@@ -82,7 +76,7 @@ class TestStorePATCH(APITestCase):
         data = get_store_payload()
 
         response = self.client.patch(
-            f"{self.PATH}/{self.store.id}", data, format="json"
+            f"{self.PATH}/{self.store.id}/", data, format="json"
         )
         output = response.json()
 
@@ -98,7 +92,7 @@ class TestStorePATCH(APITestCase):
         data = get_store_payload()
 
         response = self.client.patch(
-            f"{self.PATH}/{self.store.id}", data, format="json"
+            f"{self.PATH}/{uuid4()}/", data, format="json"
         )
         output = response.json()
 
@@ -118,7 +112,7 @@ class TestStorePATCH(APITestCase):
         data = {"name": new_store.name}
 
         response = self.client.patch(
-            f"{self.PATH}/{self.store.id}", data, format="json"
+            f"{self.PATH}/{self.store.id}/", data, format="json"
         )
         output = response.json()
 
