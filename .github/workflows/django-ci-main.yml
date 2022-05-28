@@ -29,6 +29,9 @@ jobs:
       run: |
             echo "TEST=True" > .env
             echo "SECRET_KEY=4wt_&4bjq" >> .env
+            echo "ADMIN_NAME=admin" >> .env
+            echo "ADMIN_PASSWORD=1234" >> .env
+            echo "ADMIN_EMAIL=admin@mail.com" >> .env
     - name: Create Migrations
       run: python manage.py makemigrations
     - name: Run Tests
