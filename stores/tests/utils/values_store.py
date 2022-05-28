@@ -11,8 +11,7 @@ store_correct = {
     "number": fake.building_number(),
     "state": fake.current_country_code(),
     "other_information": "",
-    "zip_code": fake.postcode(),
-    #"updated_at": datetime.now(),
+    "zip_code": fake.postcode()
 }
 
 store_success = {
