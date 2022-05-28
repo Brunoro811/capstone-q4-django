@@ -1,6 +1,8 @@
 from accounts.models import AccountModel
-from accounts.tests.utils import user_admin_correct as function_user_admin_correct
-from accounts.tests.utils import user_seller_correct as function_user_seller_correct
+from accounts.tests.utils import \
+    user_admin_correct as function_user_admin_correct
+from accounts.tests.utils import \
+    user_seller_correct as function_user_seller_correct
 from rest_framework import status
 from rest_framework.test import APITestCase
 
