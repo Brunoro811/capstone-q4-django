@@ -6,6 +6,11 @@ from django.utils import timezone
 
 
 class AccountModel(AbstractUser):
+    class Meta:
+        verbose_name= 'user'
+        verbose_name_plural= 'users'
+        abstract= False
+        db_table='accounts'
     
     id = models.UUIDField(primary_key=True,default=uuid4,editable=False)
     email = models.EmailField(unique=True)
