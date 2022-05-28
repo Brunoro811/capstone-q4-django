@@ -1,5 +1,4 @@
 from accounts.models import AccountModel
-from accounts.tests.utils import user_admin_correct, user_seller_correct
 from accounts.tests.utils.util import get_admin_payload, get_seller_payload
 from rest_framework.test import APITestCase
 from stores.models import StoreModel
