@@ -1,7 +1,8 @@
 from django.urls import path
 
-import stores.views as views
+from stores.views import ListCreateStores, StoreByIdView
 
 urlpatterns = [
-    path("stores/", views.ListCreateStores.as_view()),
+    path("stores/", ListCreateStores.as_view()),
+    path('stores/<store_id>', StoreByIdView.as_view()),
 ]
