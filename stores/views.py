@@ -7,7 +7,9 @@ from stores.exception import (StoreIsAlreadyActive, StoreIsAlreadyDeactivated,
                               StoreNameAlreadyExists)
 from stores.models import StoreModel
 from stores.permissions import IsAdmin, StoreByIdViewPermission
-from stores.serializers import StoreModelByIdSerializer, StoreModelSerializer
+from stores.serializers import (ActivateDeactivateStoreSerializer,
+                                StoreModelByIdSerializer, StoreModelSerializer,
+                                StoreModelUpdateSerializer)
 
 
 class ListCreateStores(generics.ListCreateAPIView):
@@ -92,15 +94,8 @@ class StoreByIdView(RetrieveUpdateAPIView):
     lookup_url_kwarg = "store_id"
 
     def patch(self, request, *args, **kwargs):
-<<<<<<< HEAD
         self.serializer_class = StoreModelSerializer
-        store = (
-            StoreModel.objects.filter(name=self.request.data.get("name")).exists()
-        )
-=======
-        self.serializer_class = StoreModelUpdateSerializer
         store = StoreModel.objects.filter(name=self.request.data.get("name")).exists()
->>>>>>> b62d22eec3900574953a7681f4a0684a10a001da
         if store:
             raise StoreNameAlreadyExists
 
