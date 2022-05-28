@@ -5,7 +5,7 @@ from rest_framework.generics import RetrieveUpdateAPIView
 from stores.exception import StoreNameAlreadyExists
 from stores.models import StoreModel
 from stores.permissions import IsAdmin, StoreByIdViewPermission
-from stores.serializers import StoreModelByIdSerializer, StoreModelSerializer, StoreModelUpdateSerializer
+from stores.serializers import StoreModelByIdSerializer, StoreModelSerializer
 
 
 class ListCreateStores(generics.ListCreateAPIView):
@@ -49,7 +49,7 @@ class StoreByIdView(RetrieveUpdateAPIView):
     lookup_url_kwarg = "store_id"
     
     def patch(self, request, *args, **kwargs):
-        self.serializer_class = StoreModelUpdateSerializer
+        self.serializer_class = StoreModelSerializer
         store = (
             StoreModel.objects.filter(name=self.request.data.get("name")).exists()
         )
