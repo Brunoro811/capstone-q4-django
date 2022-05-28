@@ -18,8 +18,8 @@ class AccountSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "created_at",
-            "store_id",
             "password",
+            "store",
         )
 
         extra_kwargs = {
@@ -34,6 +34,7 @@ class AccountSerializer(serializers.ModelSerializer):
             'first_name': {"help_text": "Maximum field length 150 characters."},
             'last_name': {"help_text": "Maximum field length 255 characters."},
             'username': {"help_text": "Unique. 150 characters or fewer. Letters, digits and @/./+/-/_ only."},  
+            'store': {"help_text": "Field is foregnkey, can be null or String UUID"},  
         }
 
     def checking_allowed_fields_for_seller(self,validated_data):
