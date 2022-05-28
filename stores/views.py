@@ -1,8 +1,7 @@
 from django.utils import timezone
-from requests import Response
-from rest_framework import generics, status
+from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.views import APIView
+from rest_framework.generics import RetrieveUpdateAPIView
 
 from stores.exception import (
     StoreIsAlreadyActive,
@@ -10,8 +9,13 @@ from stores.exception import (
     StoreNameAlreadyExists,
 )
 from stores.models import StoreModel
-from stores.permissions import IsAdmin
-from stores.serializers import ActivateDeactivateStoreSerializer, StoreModelSerializer
+from stores.permissions import IsAdmin, StoreByIdViewPermission
+from stores.serializers import (
+    ActivateDeactivateStoreSerializer,
+    StoreModelByIdSerializer,
+    StoreModelSerializer,
+    StoreModelUpdateSerializer,
+)
 
 
 class ListCreateStores(generics.ListCreateAPIView):
@@ -53,7 +57,7 @@ class ActivateStore(generics.UpdateAPIView):
 
     def patch(self, request, *args, **kwargs):
         """
-        Route for activate an deactivated store
+        Route for activate an store
         """
         store_exists = StoreModel.objects.filter(id=kwargs["store_id"]).exists()
         if store_exists:
@@ -61,7 +65,6 @@ class ActivateStore(generics.UpdateAPIView):
             if store.is_active:
                 raise StoreIsAlreadyActive
             store.is_active = True
-            store.updated_at = timezone.now()
             store.save()
         return super().patch(request, *args, **kwargs)
 
@@ -75,7 +78,7 @@ class DeactivateStore(generics.UpdateAPIView):
 
     def patch(self, request, *args, **kwargs):
         """
-        Route for deactivate an activated store
+        Route for an activated store
         """
         store_exists = StoreModel.objects.filter(id=kwargs["store_id"]).exists()
         if store_exists:
@@ -83,6 +86,23 @@ class DeactivateStore(generics.UpdateAPIView):
             if not store.is_active:
                 raise StoreIsAlreadyDeactivated
             store.is_active = False
-            store.updated_at = timezone.now()
             store.save()
+        return super().patch(request, *args, **kwargs)
+
+
+class StoreByIdView(RetrieveUpdateAPIView):
+
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [StoreByIdViewPermission]
+
+    queryset = StoreModel.objects.all()
+    serializer_class = StoreModelByIdSerializer
+    lookup_url_kwarg = "store_id"
+
+    def patch(self, request, *args, **kwargs):
+        self.serializer_class = StoreModelUpdateSerializer
+        store = StoreModel.objects.filter(name=self.request.data.get("name")).exists()
+        if store:
+            raise StoreNameAlreadyExists
+
         return super().patch(request, *args, **kwargs)
