@@ -44,3 +44,18 @@ fields_request_create_store = [
     "other_information",
     "zip_code",
 ]
+
+get_store_by_id_200_response_fields = [
+    "id",
+    "name",
+    "state",
+    "street",
+    "number",
+    "zip_code",
+    "is_active",
+    "other_information",
+    "created_at",
+    "updated_at",
+    "sellers",
+    "admins"
+]
