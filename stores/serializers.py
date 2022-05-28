@@ -1,3 +1,4 @@
+import ipdb
 from django.utils import timezone
 from rest_framework import serializers
 
@@ -34,3 +35,16 @@ class StoreModelSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data["updated_at"] = timezone.now()
         return super().create(validated_data)
+
+
+class ActivateDeactivateStoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StoreModel
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        return {
+            "detail": f"store {instance.name} activated"
+            if instance.is_active
+            else f"store {instance.name} deactivated"
+        }
