@@ -11,4 +11,5 @@ def get_store_payload():
         "number": fake.random_number(4),
         "zip_code": fake.zipcode(),
         "other_information": fake.text(150),
+        "is_active": True
     }

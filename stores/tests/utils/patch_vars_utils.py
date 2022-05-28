@@ -8,4 +8,5 @@ update_store_200_response_fields = (
     "other_information",
     "created_at",
     "updated_at",
+    "is_active"
 )
