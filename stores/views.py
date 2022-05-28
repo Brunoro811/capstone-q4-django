@@ -4,7 +4,7 @@ from rest_framework.generics import RetrieveUpdateAPIView
 
 from stores.exception import StoreNameAlreadyExists
 from stores.models import StoreModel
-from stores.permissions import IsAdmin
+from stores.permissions import IsAdmin, StoreByIdViewPermission
 from stores.serializers import StoreModelByIdSerializer, StoreModelSerializer
 
 
@@ -42,7 +42,7 @@ class ListCreateStores(generics.ListCreateAPIView):
 class StoreByIdView(RetrieveUpdateAPIView):
 
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAdmin]
+    permission_classes = [StoreByIdViewPermission]
 
     queryset = StoreModel.objects.all()
     serializer_class = StoreModelByIdSerializer
