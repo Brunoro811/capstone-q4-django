@@ -19,7 +19,7 @@ class AccountSerializer(serializers.ModelSerializer):
             "last_name",
             "created_at",
             "password",
-            "store",
+            "store_id",
         )
 
         extra_kwargs = {
@@ -34,7 +34,7 @@ class AccountSerializer(serializers.ModelSerializer):
             'first_name': {"help_text": "Maximum field length 150 characters."},
             'last_name': {"help_text": "Maximum field length 255 characters."},
             'username': {"help_text": "Unique. 150 characters or fewer. Letters, digits and @/./+/-/_ only."},  
-            'store': {"help_text": "Field is foregnkey, can be null or String UUID"},  
+            'store_id': {"help_text": "Field is foregnkey, can be null or String UUID"},  
         }
 
     def checking_allowed_fields_for_seller(self,validated_data):
@@ -138,6 +138,8 @@ class RetrieveUpdateOneSerializer(serializers.ModelSerializer):
             'first_name': {"help_text": "Maximum field length 150 characters."},
             'last_name': {"help_text": "Maximum field length 255 characters."},
             'username': {"help_text": "Unique. 150 characters or fewer. Letters, digits and @/./+/-/_ only."},  
+            'store_id': {"help_text": "Field is foregnkey, can be null or String UUID"},  
+
         }
 
     def update(self, instance, validated_data):
