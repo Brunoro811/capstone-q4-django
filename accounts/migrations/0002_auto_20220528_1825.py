@@ -18,7 +18,6 @@ class Migration(migrations.Migration):
     dependencies = [
         ('accounts', '0001_initial'),
     ]
-
     operations = [
         migrations.RunPython(default_user_admin)
     ]
