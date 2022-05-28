@@ -50,16 +50,16 @@ class StoreModelByIdSerializer(serializers.ModelSerializer):
             "is_active",
             "other_information",
             "created_at",
-            "updated_at"
+            "updated_at",
         ]
         read_only_fields = ["id", "is_active", "created_at", "updated_at"]
 
-        def to_representation(self, instance: StoreModel):
-            sellers_to_store = AccountModel.objects.filter(is_seller=True)
-            admins_to_store = AccountModel.objects.filter(is_admin=True)
-            
-            ret = super().to_representation(instance)
-            ret["sellers"] = AccountSerializer(sellers_to_store, many=True).data
-            ret["admins"] = AccountSerializer(admins_to_store, many=True).data
+    def to_representation(self, instance: StoreModel):
+        sellers_to_store = AccountModel.objects.filter(is_seller=True)
+        admins_to_store = AccountModel.objects.filter(is_admin=True)
+        
+        ret = super().to_representation(instance)
+        ret["sellers"] = AccountSerializer(sellers_to_store, many=True).data
+        ret["admins"] = AccountSerializer(admins_to_store, many=True).data
 
-            return ret
+        return ret
