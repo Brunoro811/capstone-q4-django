@@ -14,5 +14,5 @@ class StoreModel(models.Model):
     state = models.CharField(max_length=100)
     other_information = models.CharField(max_length=150)
     is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(default=timezone.now,auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
