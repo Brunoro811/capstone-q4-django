@@ -8,7 +8,7 @@ def get_store_payload():
         "name": fake.unique.company(),
         "state": fake.state(),
         "street": fake.street_name(),
-        "number": fake.numerify(),
+        "number": fake.random_number(4),
         "zip_code": fake.zipcode(),
         "other_information": fake.text(150),
     }
