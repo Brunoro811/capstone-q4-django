@@ -1,11 +1,11 @@
-import django
-from rest_framework import generics, status
+from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.generics import RetrieveUpdateAPIView
 
 from stores.exception import StoreNameAlreadyExists
 from stores.models import StoreModel
 from stores.permissions import IsAdmin
-from stores.serializers import StoreModelSerializer
+from stores.serializers import StoreModelByIdSerializer, StoreModelSerializer
 
 
 class ListCreateStores(generics.ListCreateAPIView):
@@ -38,3 +38,12 @@ class ListCreateStores(generics.ListCreateAPIView):
         This route lists all stores.
         """
         return super().get(request, *args, **kwargs)
+
+class StoreByIdView(RetrieveUpdateAPIView):
+
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAdmin]
+
+    queryset = StoreModel.objects.all()
+    serializer_class = StoreModelByIdSerializer
+    lookup_url_kwarg = "store_id"
