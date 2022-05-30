@@ -20,8 +20,7 @@ class TestGetCategory(APITestCase):
         response = self.client.patch(
             f"/categories/{category_id}/", {"name": "test category 2"}, format="json"
         )
-        print("\n\n\n\n", self.test_admin.is_admin, "\n\n\n\n")
-        print("\n\n\n\n", response.json(), "\n\n\n\n")
+
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("id", response.json())
