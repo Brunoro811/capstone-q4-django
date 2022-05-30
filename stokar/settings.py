@@ -169,4 +169,5 @@ AUTH_USER_MODEL = "accounts.AccountModel"
 
 REST_FRAMEWORK = {"DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema"}
 
-django_on_heroku.settings(locals())
+if not test:
+    django_on_heroku.settings(locals())
