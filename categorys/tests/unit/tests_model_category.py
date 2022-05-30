@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from categorys.models import CategoryModel
 from django.db.models import Model
 from django.test import TestCase
@@ -17,3 +19,5 @@ class CategoryModelTest(TestCase):
         self.assertEqual(self.name,self.category_object.name)
 
         self.assertIsInstance(self.category_object, Model)
+
+        self.assertIsInstance(self.category_object.id, UUID)
