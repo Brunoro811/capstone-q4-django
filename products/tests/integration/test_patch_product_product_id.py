@@ -46,11 +46,7 @@ class TestGetProduct(APITestCase):
                     if product_field == key:
                         self.assertIn(product_field, response.json())
                         self.assertEqual(response.json()[product_field], value)
-            else:
-                if key == "store_id":
-                    response = self.client.patch(
-                        f"/products/{product_id}/", {key: value}, format="json"
-                    )
+
 
     def test_if_user_cant_update_a_product_without_authorization_header(self):
         product_id = self.test_product.id
