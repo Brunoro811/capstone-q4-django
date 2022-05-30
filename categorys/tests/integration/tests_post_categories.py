@@ -117,14 +117,14 @@ class TestStorePATCH(APITestCase):
         self.client.force_authenticate(user=self.admin)
 
         # Creating new store
-        new_store: CategoryModel = CategoryModel.objects.create(
+        new_category: CategoryModel = CategoryModel.objects.create(
             **get_category_payload()
         )
 
         # Repeating `name` to force unicity error
-        data = {"name": new_store.name}
+        data = {"name": new_category.name}
 
-        response = self.client.patch({self.PATH}, data, format="json")
+        response = self.client.post(self.PATH, data, format="json")
         output = response.json()
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
