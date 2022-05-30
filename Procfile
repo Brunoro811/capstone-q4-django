@@ -1,1 +1,1 @@
-web: gunicorn stokar.wsgi
+web: gunicorn stokar.wsgi --log-file -
