@@ -104,7 +104,7 @@ class TestStorePATCH(APITestCase):
 
         data = get_category_payload()
 
-        response = self.client.patch(self.PATH, data, format="json")
+        response = self.client.post(self.PATH, data, format="json")
         output = response.json()
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
