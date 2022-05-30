@@ -11,8 +11,7 @@ store_correct = {
     "number": fake.building_number(),
     "state": fake.current_country_code(),
     "other_information": "",
-    "zip_code": fake.postcode(),
-    "updated_at": datetime.utcnow(),
+    "zip_code": fake.postcode()
 }
 
 store_success = {
@@ -44,4 +43,19 @@ fields_request_create_store = [
     "state",
     "other_information",
     "zip_code",
+]
+
+get_store_by_id_200_response_fields = [
+    "id",
+    "name",
+    "state",
+    "street",
+    "number",
+    "zip_code",
+    "is_active",
+    "other_information",
+    "created_at",
+    "updated_at",
+    "sellers",
+    "admins"
 ]

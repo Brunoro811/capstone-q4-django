@@ -2,10 +2,10 @@ from django.contrib.auth import authenticate
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
+from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.generics import (GenericAPIView, ListCreateAPIView,
                                      RetrieveUpdateAPIView, UpdateAPIView)
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from accounts.exceptions import (AlreadyRegisteredEmailError,
                                  AlreadyRegisteredUsernameError,
@@ -14,8 +14,8 @@ from accounts.models import AccountModel
 from accounts.permissions import (IsAdmin, IsAuthenticatedAccounts,
                                   RetrieveUpdateOneAuthenticatePermission,
                                   RetrieveUpdateOneAuthorizePermission)
-from accounts.serializers import (AccountSerializer, LoginSerializer,
-                                  RetrieveUpdateOneSerializer)
+from accounts.serializers import (AccountSerializer, AccountUpdateSerializer,
+                                  LoginSerializer, RetrieveUpdateOneSerializer)
 
 
 class AccountsListCreateUpdateAPIView(ListCreateAPIView,UpdateAPIView):
@@ -38,16 +38,29 @@ class AccountsListCreateUpdateAPIView(ListCreateAPIView,UpdateAPIView):
         
         if message_already_exists_error:
             raise UserAlreadyExistsException(detail=message_already_exists_error[0])
-        
+    
+    def put(self, request, *args, **kwargs):
+        """
+            # Method \"PUT\" not allowed.
+        """
+        self.serializer_class = AccountUpdateSerializer
+        raise MethodNotAllowed(method="PUT")
         
 
     def patch(self, request, *args, **kwargs):
+        """
+            This route is authenticated.
+            All fields are optional.
+            Seller User can change : 'password', 'first_name' and 'last_name'.
+            Admin user can change : 'email','username','password','is_seller', 'first_name', 'last_name' and 'store_id'.
+        """
         
+        self.serializer_class = AccountUpdateSerializer
         self.kwargs.setdefault('pk', request.user.id)   
         return super().patch(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
-
+        
         # these fields are unique
         restrict_unique_fields = ('username','email',)
         dict_fields = {}
@@ -98,7 +111,38 @@ class RetrieveUpdateOneView(RetrieveUpdateAPIView):
     queryset = AccountModel.objects.all()
     lookup_url_kwarg = "user_id"
 
+    def get(self, request, *args, **kwargs):
+
+        """
+            This route is authenticated.
+
+            This route receives as a parameter a `user_id` of type UUID.
+            
+            This route returns the user or a not found message.
+        """
+
+        return super().get(request, *args, **kwargs)
+    
+    def put(self, request, *args, **kwargs):
+        """
+            # Method \"PUT\" not allowed.
+        """
+        self.serializer_class = AccountUpdateSerializer
+        return super().put(request, *args, **kwargs)
+
     def patch(self, request, *args, **kwargs):
+
+        """
+            This route is authenticated.
+            
+            Only the admin user has access.
+            
+            This route receives as a parameter a `user_id` of type UUID.
+            
+            This route returns the user or a not found message.
+            
+            This route updates the user.
+        """
 
         user_exists = self.get_queryset().filter(pk=kwargs["user_id"]).exists()
 

@@ -27,7 +27,7 @@ class AccountsModelTest(TestCase):
 
         cls.store_object = StoreModel.objects.create(**store_correct)
         
-        cls.user_admin_correct_object = AccountModel.objects.create_user(**cls.user_admin_correct, store=cls.store_object)
+        cls.user_admin_correct_object = AccountModel.objects.create_user(**cls.user_admin_correct, store_id=cls.store_object)
         
         return super().setUpTestData()
     
@@ -60,4 +60,4 @@ class AccountsModelTest(TestCase):
 
     def test_model_accounts_foreignkey_store_id_field(self):
         
-        self.assertIsInstance(self.user_admin_correct_object.store , StoreModel)
+        self.assertIsInstance(self.user_admin_correct_object.store_id , StoreModel)
