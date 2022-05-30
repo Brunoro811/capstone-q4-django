@@ -1,16 +1,28 @@
 from uuid import UUID
 
+from categorys.models import CategoryModel
 from django.test import TestCase
-from products.models import ProductsModel
-from products.tests.utils import value_product
+from products.models import ProductModel
+from products.tests.utils import product_shirt
+from stores.models import StoreModel
+from stores.tests.utils import store_correct
 
 
 class ProductModelTest(TestCase):
     
     @classmethod
     def setUpTestData(cls) -> None:
+        
+        # create store and category
+        cls.store_created = StoreModel.objects.create(**store_correct)
+        cls.category_created = CategoryModel.objects.create(**{'name': "Vestidos"})
+        
+        cls.product_shirt = ProductModel.objects.create(
+            **product_shirt(), 
+            store_id= cls.store_created,
+            category_id= cls.category_created,
+        )
 
-        cls.product_shirt = value_product()
         cls.name = cls.product_shirt.name
         cls.cost_value = cls.product_shirt.cost_value
         cls.sale_value_retail = cls.product_shirt.sale_value_retail
@@ -25,7 +37,7 @@ class ProductModelTest(TestCase):
         
         self.assertIsInstance(self.product_shirt.id, UUID)
 
-        self.assertIsInstance(self.product_shirt, ProductsModel )
+        self.assertIsInstance(self.product_shirt, ProductModel )
         
         self.assertIsInstance(self.product_shirt.name, str )
         self.assertEqual(self.product_shirt.name, self.name)
@@ -34,16 +46,16 @@ class ProductModelTest(TestCase):
         self.assertEqual(self.product_shirt.cost_value, self.cost_value)
 
         self.assertIsInstance(self.product_shirt.sale_value_retail, float )
-        self.assertEqual(self.product_shirt.cost_vasale_value_retaillue, self.sale_value_retail)
+        self.assertEqual(self.product_shirt.sale_value_retail, self.sale_value_retail)
 
         self.assertIsInstance(self.product_shirt.sale_value_wholesale, float )
         self.assertEqual(self.product_shirt.sale_value_wholesale, self.sale_value_wholesale)
 
-        self.assertIsInstance(self.product_shirt.store_id, UUID )
-        self.assertEqual(self.product_shirt.store_id, self.store_id)
-
-        self.assertIsInstance(self.product_shirt.category_id, UUID )
-        self.assertEqual(self.product_shirt.category_id, self.category_id)
-
         self.assertIsInstance(self.product_shirt.quantity_wholesale, int )
         self.assertEqual(self.product_shirt.quantity_wholesale, self.quantity_wholesale)
+
+        self.assertIsInstance(self.product_shirt.store_id.id, UUID )
+        self.assertEqual(self.product_shirt.store_id, self.store_id)
+
+        self.assertIsInstance(self.product_shirt.category_id.id, UUID )
+        self.assertEqual(self.product_shirt.category_id, self.category_id)

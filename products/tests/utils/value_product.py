@@ -1,19 +1,19 @@
-from categorys.models import CategoryModel
-from stores.models import StoreModel
-
 
 def product_shirt ():
 
     """
-        This function return dict shirt with `category_id`  and `store_id` empty.
+        The product_shirt function returns a dictionary compatible with the ProductModel instance.
+        This function automatically searches the database for the StoreModel and CategoryModel 
+        instances, if it finds it returns a product with the foregnkey, otherwise it returns 
+        the dictionary with several `storee_id` and `category_id` fields.
+        Ensure at least one instance of StoreModel and category Model in the database.
+        This function will always take the first one.
     """
-
+    
     return {
         'name': 'Camiseta Casual',
         'cost_value': 15.99,
         'sale_value_retail': 46.99,
         'sale_value_wholesale': 35.99,
-        'store_id': StoreModel.objects.all()[0] ,
-        'category_id': StoreModel.objects.all()[0],
         'quantity_wholesale': 10,
     }
