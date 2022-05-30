@@ -23,29 +23,34 @@ class TestGetProduct(APITestCase):
         test_category = CategoryModel.objects.create(name="test category")
         test_store = StoreModel.objects.create(**store_success)
         cls.test_product = ProductModel.objects.create(
-            **correct_product(str(test_store.id), test_category.name)
+            **correct_product(test_store, test_category)
         )
         test_another_store = StoreModel.objects.create(**store_success_update)
         test_another_category = CategoryModel.objects.create(
             name="another test category"
         )
-        cls.product_update = product_update(
-            str(test_another_store.id), test_another_category.name
-        )
+        cls.product_update = product_update(test_another_store, test_another_category)
 
     def test_if_admin_can_update_a_product(self):
         product_id = self.test_product.id
         self.client.force_authenticate(user=self.test_admin)
         for key, value in self.product_update.items():
-            response = self.client.patch(
-                f"/products/{product_id}/", {key: value}, format="json"
-            )
-            self.assertEqual(response.headers["Content-Type"], "application/json")
-            self.assertEqual(response.status_code, status.HTTP_200_OK)
-            for product_field in products_fields_response:
-                if product_field == key:
-                    self.assertIn(product_field, response.json())
-                    self.assertEqual(response.json()[product_field], value)
+            if key != "store_id" and key != "category_id":
+                response = self.client.patch(
+                    f"/products/{product_id}/", {key: value}, format="json"
+                )
+
+                self.assertEqual(response.headers["Content-Type"], "application/json")
+                self.assertEqual(response.status_code, status.HTTP_200_OK)
+                for product_field in products_fields_response:
+                    if product_field == key:
+                        self.assertIn(product_field, response.json())
+                        self.assertEqual(response.json()[product_field], value)
+            else:
+                if key == "store_id":
+                    response = self.client.patch(
+                        f"/products/{product_id}/", {key: value}, format="json"
+                    )
 
     def test_if_user_cant_update_a_product_without_authorization_header(self):
         product_id = self.test_product.id

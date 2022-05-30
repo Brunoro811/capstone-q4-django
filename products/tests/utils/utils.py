@@ -1,16 +1,16 @@
-def correct_product(store_id, caterogy_name):
+def correct_product(store, category):
     return {
         "name": "Botas muito boas",
         "cost_value": 19.99,
         "sale_value_retail": 18.99,
         "sale_value_wholesale": 16.99,
         "quantity_wholesale": 200,
-        "store_id": store_id,
-        "category": caterogy_name,
+        "store_id": store,
+        "category_id": category,
     }
 
 
-def product_update(store_id, caterogy_name):
+def product_update(store_id, category):
     return {
         "name": "Botas muito boas melhores ainda",
         "cost_value": 29.99,
@@ -18,7 +18,7 @@ def product_update(store_id, caterogy_name):
         "sale_value_wholesale": 26.99,
         "quantity_wholesale": 400,
         "store_id": store_id,
-        "category": caterogy_name,
+        "category_id": category,
     }
 
 
@@ -29,5 +29,5 @@ products_fields_response = [
     "sale_value_wholesale",
     "quantity_wholesale",
     "store_id",
-    "category",
+    "category_id",
 ]

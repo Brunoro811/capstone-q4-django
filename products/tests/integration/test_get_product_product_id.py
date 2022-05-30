@@ -19,7 +19,7 @@ class TestGetProduct(APITestCase):
         test_category = CategoryModel.objects.create(name="test category")
         test_store = StoreModel.objects.create(**store_success)
         cls.test_product = ProductModel.objects.create(
-            **correct_product(str(test_store.id), test_category.name)
+            **correct_product(test_store, test_category)
         )
 
     def test_if_admin_can_get_a_product(self):
