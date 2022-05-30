@@ -14,6 +14,7 @@ from os import getenv
 from pathlib import Path
 
 import dj_database_url
+import django_on_heroku
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -167,3 +168,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "accounts.AccountModel"
 
 REST_FRAMEWORK = {"DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema"}
+
+django_on_heroku.settings(locals())
