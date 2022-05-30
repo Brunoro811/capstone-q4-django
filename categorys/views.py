@@ -2,15 +2,12 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 
-from categorys.models import CategoryModel
-from categorys.permissions import (
-    CreateAuthenticatePermission,
-    CreateAuthorizePermission,
-    IsAdmin,
-)
-from categorys.serializers import (GetCategoriesSerializer,CreateCategorySerializer,
-                                   GetUpdateCategorySerializer)
 from categorys.exceptions import AlreadyRegisteredNameError
+from categorys.models import CategoryModel
+from categorys.permissions import (CreateAuthenticatePermission,
+                                   CreateAuthorizePermission, IsAdmin)
+from categorys.serializers import (GetUpdateCategorySerializer,
+                                   ListCreateCategorySerializer)
 
 
 class ListCreateCategoryView(ListCreateAPIView):
