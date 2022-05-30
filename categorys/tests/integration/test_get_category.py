@@ -25,9 +25,7 @@ class TestCategories(APITestCase):
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn("id", response.json())
-        self.assertIn("name", response.json())
-        self.assertIsInstance(response.json()["name"], str)
+        self.assertIsInstance(response.json(), list)
 
     def test_if_seller_can_get_categories(self):
         self.client.force_authenticate(user=self.seller)
@@ -35,7 +33,5 @@ class TestCategories(APITestCase):
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn("id", response.json())
-        self.assertIn("name", response.json())
-        self.assertIsInstance(response.json()["name"], str)
+        self.assertIsInstance(response.json(), list)
 
