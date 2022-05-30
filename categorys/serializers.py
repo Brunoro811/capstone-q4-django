@@ -3,6 +3,12 @@ from rest_framework.serializers import ModelSerializer
 from categorys.models import CategoryModel
 
 
+class GetUpdateCategorySerializer(ModelSerializer):
+    class Meta:
+        model = CategoryModel
+        fields = "__all__"
+
+
 class CreateCategorySerializer(ModelSerializer):
     class Meta:
         model = CategoryModel
