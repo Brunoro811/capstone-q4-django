@@ -7,9 +7,9 @@ class GetUpdateCategorySerializer(ModelSerializer):
     class Meta:
         model = CategoryModel
         fields = "__all__"
-
-
-class CreateCategorySerializer(ModelSerializer):
+        
+        
+class ListCreateCategorySerializer(ModelSerializer):
     class Meta:
         model = CategoryModel
         fields = "__all__"
