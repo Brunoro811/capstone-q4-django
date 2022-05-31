@@ -46,13 +46,16 @@ class TestGetVariation(APITestCase):
     def test_if_admin_can_list_product_variations_200(self):
         # Inserting variations
         times = 5
-        variations = [get_variation_payload(self.product.id) for _ in range(times)]
+        variations = [
+            VariationModel(**get_variation_payload(), product_id=self.product)
+            for _ in range(times)
+        ]
         VariationModel.objects.bulk_create(variations)
 
         # Authenticating with admin credentials
         self.client.force_authenticate(user=self.admin)
 
-        response = self.client.get(self.PATH, format="json")
+        response = self.client.get(self.PATH, {}, format="json")
         output = response.json()
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
@@ -68,7 +71,10 @@ class TestGetVariation(APITestCase):
     def test_if_seller_can_list_product_variations_200(self):
         # Inserting variations
         times = 5
-        variations = [get_variation_payload(self.product.id) for _ in range(times)]
+        variations = [
+            VariationModel(**get_variation_payload(), product_id=self.product)
+            for _ in range(times)
+        ]
         VariationModel.objects.bulk_create(variations)
 
         # Authenticating with admin credentials
