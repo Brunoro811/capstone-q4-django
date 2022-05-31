@@ -17,7 +17,6 @@ class GetUpdateProductSerializer(serializers.ModelSerializer):
             "is_active",
             "store_id",
             "category_id",
-            # "category",
         ]
         extra_kwargs = {"category_id": {"write_only": True}}
 
