@@ -16,4 +16,4 @@ class VariationModel(models.Model):
     color = models.CharField(max_length=150)
     is_active = models.BooleanField(default=True)
 
-    product_id = models.ForeignKey("products.ProductModel",on_delete=models.PROTECT,db_column='product_id',related_name='product')
+    product_id = models.ForeignKey("products.ProductModel",on_delete=models.PROTECT,db_column='product_id',related_name='variations')
