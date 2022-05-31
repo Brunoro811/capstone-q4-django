@@ -19,7 +19,7 @@ class GenericStoreFields():
             "is_active",
             "other_information",
             "created_at",
-            "updated_at",
+            "updated_at"
         ]
         read_only_fields = ["id", "is_active", "created_at", "updated_at"]
 
@@ -37,13 +37,21 @@ class StoreModelSerializer(serializers.ModelSerializer,GenericStoreFields):
     ...
 
 class StoreModelByIdSerializer(serializers.ModelSerializer,GenericStoreFields):
+    users = AccountSerializer(read_only=True,many=True,)
+    class Meta(GenericStoreFields.Meta):
+        fields = (
+            *GenericStoreFields.Meta.fields,
+            'users',
+        )
+
     def to_representation(self, instance: StoreModel):
-        sellers_to_store = AccountModel.objects.filter(is_seller=True)
-        admins_to_store = AccountModel.objects.filter(is_admin=True)
 
         ret = super().to_representation(instance)
-        ret["sellers"] = AccountSerializer(sellers_to_store, many=True).data
-        ret["admins"] = AccountSerializer(admins_to_store, many=True).data
+        list_users = ret.pop('users')
+        sellers_to_store = [ seller for seller in list_users if not seller['is_admin'] ]
+        admins_to_store = [ seller for seller in list_users if seller['is_admin'] ]
+        ret["sellers"] = sellers_to_store 
+        ret["admins"] =  admins_to_store
 
         return ret
 

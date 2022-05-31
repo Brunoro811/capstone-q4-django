@@ -2,45 +2,50 @@ from uuid import uuid4
 
 from accounts.models import AccountModel
 from accounts.tests.utils.util import user_admin_correct, user_seller_correct
-from categorys.models import CategoryModel
+from categories.models import CategoryModel
+from products.models import ProductModel
+from products.tests.utils.utils import (correct_product,
+                                        products_fields_response)
 from rest_framework import status
 from rest_framework.test import APITestCase
+from stores.models import StoreModel
+from stores.tests.utils import store_success
 
 
-class TestGetCategory(APITestCase):
+class TestGetProduct(APITestCase):
     @classmethod
     def setUpTestData(cls):
         cls.test_admin = AccountModel.objects.create_user(**user_admin_correct())
         cls.test_seller = AccountModel.objects.create_user(**user_seller_correct())
-        cls.test_category = CategoryModel.objects.create(name="test category")
+        test_category = CategoryModel.objects.create(name="test category")
+        test_store = StoreModel.objects.create(**store_success)
+        cls.test_product = ProductModel.objects.create(
+            **correct_product(test_store, test_category)
+        )
 
-    def test_if_admin_can_get_a_category(self):
-        category_id = self.test_category.id
+    def test_if_admin_can_get_a_product(self):
+        product_id = self.test_product.id
         self.client.force_authenticate(user=self.test_admin)
-        response = self.client.get(f"/categories/{category_id}/", format="json")
+        response = self.client.get(f"/products/{product_id}/", format="json")
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn("id", response.json())
-        self.assertEqual(response.json()["id"], str(category_id))
-        self.assertIn("name", response.json())
-        self.assertIsInstance(response.json()["name"], str)
+        for item in products_fields_response:
+            self.assertIn(item, response.json())
 
-    def test_if_seller_can_get_a_category(self):
-        category_id = self.test_category.id
+    def test_if_seller_can_get_a_product(self):
+        product_id = self.test_product.id
         self.client.force_authenticate(user=self.test_seller)
-        response = self.client.get(f"/categories/{category_id}/", format="json")
+        response = self.client.get(f"/products/{product_id}/", format="json")
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn("id", response.json())
-        self.assertEqual(response.json()["id"], str(category_id))
-        self.assertIn("name", response.json())
-        self.assertIsInstance(response.json()["name"], str)
+        for item in products_fields_response:
+            self.assertIn(item, response.json())
 
-    def test_if_user_cant_get_category_without_authorization_header(self):
-        category_id = self.test_category.id
-        response = self.client.get(f"/categories/{category_id}/", format="json")
+    def test_if_user_cant_get_product_without_authorization_header(self):
+        product_id = self.test_product.id
+        response = self.client.get(f"/products/{product_id}/", format="json")
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -49,10 +54,10 @@ class TestGetCategory(APITestCase):
             response.json()["detail"], "Authentication credentials were not provided."
         )
 
-    def test_if_user_cant_get_a_category_that_doesnt_exists(self):
-        category_id = uuid4()
+    def test_if_user_cant_get_a_product_that_doesnt_exists(self):
+        product_id = uuid4()
         self.client.force_authenticate(user=self.test_admin)
-        response = self.client.get(f"/categories/{category_id}/", format="json")
+        response = self.client.get(f"/products/{product_id}/", format="json")
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

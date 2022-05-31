@@ -20,5 +20,5 @@ class ProductModel(models.Model):
     is_active = models.BooleanField(default=True)
     
     store_id = models.ForeignKey("stores.StoreModel",on_delete=models.PROTECT, related_name='store',db_column='store_id')
-    category_id = models.ForeignKey("categorys.CategoryModel",on_delete=models.PROTECT, related_name='category',db_column='category_id')
+    category_id = models.ForeignKey("categories.CategoryModel",on_delete=models.PROTECT, related_name='category',db_column='category_id')
 
