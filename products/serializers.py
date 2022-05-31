@@ -23,7 +23,7 @@ class GetUpdateProductSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data):
         if "category" in data.keys():
-            category = CategoryModel.objects.get_or_create(name=data.get("category"))[0]
+            category = CategoryModel.objects.get_or_create(name__iexact=data.get("category"))[0]
             self.instance.category_id = category
         return super().to_internal_value(data)
 
