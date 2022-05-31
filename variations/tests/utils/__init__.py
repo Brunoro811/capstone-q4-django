@@ -1,4 +1,5 @@
 from variations.tests.utils.gen_variation_functions import (
+    get_post_variation_payload,
     get_product_payload,
     get_variation_payload,
 )

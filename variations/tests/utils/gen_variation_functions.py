@@ -11,6 +11,10 @@ def get_variation_payload():
     }
 
 
+def get_post_variation_payload(product_id):
+    return {**get_variation_payload(), "product_id": product_id}
+
+
 def get_product_payload():
     return {
         "name": fake.unique.word(),
