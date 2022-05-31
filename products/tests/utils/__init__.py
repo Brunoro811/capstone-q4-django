@@ -1,0 +1,1 @@
+from .value_product import product_shirt
