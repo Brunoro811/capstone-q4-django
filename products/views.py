@@ -15,6 +15,14 @@ class LisCreateProductsView(generics.ListCreateAPIView):
     queryset = ProductModel.objects.all()
     serializer_class = LisCreateProducts
 
+    def get_permissions(self):
+        if hasattr(self.request, "method"):
+            if self.request.method == "GET":
+                return [
+                    IsAuthenticated(),
+                ]
+        return super().get_permissions()
+
     def post(self, request, *args, **kwargs):
         """
         This route is authenticated.
@@ -43,9 +51,7 @@ class GetUpdateProductView(generics.RetrieveUpdateAPIView):
     def get_permissions(self):
         if hasattr(self.request, "method"):
             if self.request.method == "GET":
-                return [
-                    IsAuthenticated(),
-                ]
+                return [IsAuthenticated()]
         return super().get_permissions()
 
     def patch(self, request, *args, **kwargs):

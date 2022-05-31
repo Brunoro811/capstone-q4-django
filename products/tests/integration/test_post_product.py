@@ -39,17 +39,17 @@ class TestPostProduct(APITestCase):
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn(missin_field, response.json())
-        self.assertEqual(response.json()[missin_field], ["This field is required."])
-        
-    def test_if_user_can_create_a_product_withou_beeing_logged(self):
-        response = self.client.post('/products/', self.correct_product, format='json')
-        
-        self.assertEqual(response.headers['Content-Type'], 'application/json')
+
+    def test_if_user_cant_create_a_product_withou_beeing_logged(self):
+        response = self.client.post("/products/", self.correct_product, format="json")
+
+        self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        self.assertIn('detail', response.json())
-        self.assertEqual(response.json()['detail'], 'Authentication credentials were not provided.')
-        
+        self.assertIn("detail", response.json())
+        self.assertEqual(
+            response.json()["detail"], "Authentication credentials were not provided."
+        )
+
     def test_if_seller_cant_create_a_product(self):
         self.client.force_authenticate(user=self.test_seller)
         response = self.client.post("/products/", self.correct_product, format="json")
