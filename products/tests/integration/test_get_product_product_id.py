@@ -4,7 +4,7 @@ from accounts.models import AccountModel
 from accounts.tests.utils.util import user_admin_correct, user_seller_correct
 from categorys.models import CategoryModel
 from products.models import ProductModel
-from products.tests.utils.utils import correct_product
+from products.tests.utils.utils import correct_product, products_fields_response
 from rest_framework import status
 from rest_framework.test import APITestCase
 from stores.models import StoreModel
@@ -29,10 +29,8 @@ class TestGetProduct(APITestCase):
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn("id", response.json())
-        self.assertEqual(response.json()["id"], str(product_id))
-        self.assertIn("name", response.json())
-        self.assertIsInstance(response.json()["name"], str)
+        for item in products_fields_response:
+            self.assertIn(item, response.json())
 
     def test_if_seller_can_get_a_product(self):
         product_id = self.test_product.id
