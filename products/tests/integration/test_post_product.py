@@ -1,3 +1,5 @@
+import random
+
 from accounts.models import AccountModel
 from accounts.tests.utils.util import user_admin_correct, user_seller_correct
 from products.tests.utils.utils import correct_product_route, products_fields_response
@@ -20,30 +22,42 @@ class TestPostProduct(APITestCase):
     def test_if_admin_can_create_a_product(self):
         self.client.force_authenticate(user=self.test_admin)
         response = self.client.post("/products/", self.correct_product, format="json")
-
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         for item in products_fields_response:
             self.assertIn(item, response.json())
-            self.assertEqual(response.json()[item], correct_product_route()[item])
+            self.assertEqual(response.json()[item], self.correct_product[item])
 
-    def test_if_seller_can_create_a_product(self):
+    def test_if_user_cant_create_a_product_missing_fields(self):
+        self.client.force_authenticate(user=self.test_admin)
+        missin_field = list(self.correct_product.keys()).pop(
+            random.randint(0, len(self.correct_product.keys()) - 1)
+        )
+        correct_product_clone = {**self.correct_product}
+        correct_product_clone.pop(missin_field)
+        response = self.client.post("/products/", correct_product_clone, format="json")
+
+        self.assertEqual(response.headers["Content-Type"], "application/json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn(missin_field, response.json())
+        self.assertEqual(response.json()[missin_field], ["This field is required."])
+        
+    def test_if_user_can_create_a_product_withou_beeing_logged(self):
+        response = self.client.post('/products/', self.correct_product, format='json')
+        
+        self.assertEqual(response.headers['Content-Type'], 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertIn('detail', response.json())
+        self.assertEqual(response.json()['detail'], 'Authentication credentials were not provided.')
+        
+    def test_if_seller_cant_create_a_product(self):
         self.client.force_authenticate(user=self.test_seller)
         response = self.client.post("/products/", self.correct_product, format="json")
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        for item in products_fields_response:
-            self.assertIn(item, response.json())
-            self.assertEqual(response.json()[item], correct_product_route()[item])
-
-    def test_if_user_cant_create_a_product_missing_fields(self):
-        self.client.force_authenticate(user=self.test_admin)
-        for item in correct_product_route():
-            
-            response = self.client.post(
-                "/products/", self.correct_product, format="json"
-            )
-
-            self.assertEqual(response.headers["Content-Type"], "application/json")
-            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertIn("detail", response.json())
+        self.assertEqual(
+            response.json()["detail"],
+            "You do not have permission to perform this action.",
+        )

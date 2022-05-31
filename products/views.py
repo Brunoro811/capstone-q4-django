@@ -1,8 +1,6 @@
-import pdb
-
-from categorys.models import CategoryModel
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 from products.models import ProductModel
 from products.permissions import IsAdmin
@@ -14,6 +12,14 @@ class LisCreateProductsView(generics.ListCreateAPIView):
     authentication_classes = [TokenAuthentication]
     queryset = ProductModel.objects.all()
     serializer_class = LisCreateProducts
+
+    def get_permissions(self):
+        if hasattr(self.request, "method"):
+            if self.request.method == "GET":
+                return [
+                    IsAuthenticated(),
+                ]
+        return super().get_permissions()
 
     def post(self, request, *args, **kwargs):
         """

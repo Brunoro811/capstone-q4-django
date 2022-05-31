@@ -41,5 +41,5 @@ def correct_product_route(store_id, category_name):
         "sale_value_wholesale": 16.99,
         "quantity_wholesale": 200,
         "store_id": store_id,
-        "category_id": category_name,
+        "category": category_name,
     }
