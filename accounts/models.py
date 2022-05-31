@@ -20,4 +20,4 @@ class AccountModel(AbstractUser):
     is_admin = models.BooleanField()
     created_at = models.DateTimeField(default=timezone.now,editable=False)
 
-    store_id = models.ForeignKey("stores.StoreModel",on_delete=models.PROTECT,db_column='store_id',related_name='sellers', null=True)
+    store_id = models.ForeignKey("stores.StoreModel",on_delete=models.PROTECT,db_column='store_id',related_name='users', null=True)
