@@ -32,7 +32,7 @@ SECRET_KEY = getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "stokar-app.herokuapp.com"]
+ALLOWED_HOSTS = ["localhost", "stokar-app.herokuapp.com",'127.0.0.1']
 
 
 # Application definition
@@ -51,7 +51,7 @@ THIRD_PARTY_APPS = [
     "rest_framework.authtoken",
 ]
 
-MY_APPS = ["orders", "products", "accounts", "variations", "stores", "categorys"]
+MY_APPS = ["orders", "products", "accounts", "variations", "stores", "categories"]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS
 

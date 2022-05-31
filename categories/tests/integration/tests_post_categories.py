@@ -2,21 +2,14 @@ from uuid import uuid4
 
 from accounts.models import AccountModel
 from accounts.tests.utils import get_admin_payload, get_seller_payload
-from categorys.models import CategoryModel
-from categorys.tests.utils import (
-    create_category_200_response_fields,
-    forbidden_details,
-    get_category_payload,
-    store_name_conflict_details,
-    unauthorized_details,
-)
-from rest_framework.status import (
-    HTTP_201_CREATED,
-    HTTP_400_BAD_REQUEST,
-    HTTP_401_UNAUTHORIZED,
-    HTTP_403_FORBIDDEN,
-    HTTP_409_CONFLICT,
-)
+from categories.models import CategoryModel
+from categories.tests.utils import (create_category_200_response_fields,
+                                    forbidden_details, get_category_payload,
+                                    store_name_conflict_details,
+                                    unauthorized_details)
+from rest_framework.status import (HTTP_201_CREATED, HTTP_400_BAD_REQUEST,
+                                   HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN,
+                                   HTTP_409_CONFLICT)
 from rest_framework.test import APITestCase
 
 
