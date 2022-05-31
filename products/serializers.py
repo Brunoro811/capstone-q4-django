@@ -9,17 +9,7 @@ from products.models import ProductModel
 class LisCreateProducts(serializers.ModelSerializer):
     class Meta:
         model = ProductModel
-        fields = [
-            "id",
-            "name",
-            "cost_value",
-            "sale_value_retail",
-            "sale_value_wholesale",
-            "quantity_wholesale",
-            "is_active",
-            "store_id",
-            "category_id",
-        ]
+        fields = "__all__"
 
         extra_kwargs = {
             "category_id": {"write_only": True},
@@ -27,9 +17,7 @@ class LisCreateProducts(serializers.ModelSerializer):
 
     def to_internal_value(self, data):
         if "category" in data.keys():
-            category = CategoryModel.objects.get_or_create(
-                name__iexact=data.get("category")
-            )[0]
+            category = CategoryModel.objects.get_or_create(name=data.get("category"))[0]
             data["category_id"] = category.id
         return super().to_internal_value(data)
 
