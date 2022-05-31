@@ -43,8 +43,7 @@ class TestPostVariation(APITestCase):
         # Authenticating with admin credentials
         self.client.force_authenticate(user=self.admin)
 
-        data = get_variation_payload()
-        data.setdefault("product_id", self.product.id)
+        data = get_variation_payload(self.product.id)
 
         # Checking individualy if the updatable fields may be updated
 
@@ -55,7 +54,7 @@ class TestPostVariation(APITestCase):
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, HTTP_201_CREATED)
 
-        for field, value in create_variation_201_response_fields:
+        for field in create_variation_201_response_fields:
             # Testing if create response fields is returned
             self.assertIn(field, output)
 
@@ -64,8 +63,7 @@ class TestPostVariation(APITestCase):
         # Authenticating with admin credentials
         self.client.force_authenticate(user=self.admin)
 
-        data = get_variation_payload()
-        data.setdefault("product_id", self.product.id)
+        data = get_variation_payload(self.product.id)
 
         # Popping one field and testing if returns correct message
         for field in data.keys():
@@ -88,8 +86,7 @@ class TestPostVariation(APITestCase):
 
         self.client.credentials(HTTP_AUTHORIZATION="")
 
-        data = get_variation_payload()
-        data.setdefault("product_id", self.product.id)
+        data = get_variation_payload(self.product.id)
 
         response = self.client.post(self.PATH, data, format="json")
         output = response.json()
@@ -103,8 +100,7 @@ class TestPostVariation(APITestCase):
         # Authenticating with seller credentials
         self.client.force_authenticate(user=self.seller)
 
-        data = get_variation_payload()
-        data.setdefault("product_id", self.product.id)
+        data = get_variation_payload(self.product.id)
 
         response = self.client.post(self.PATH, data, format="json")
         output = response.json()
