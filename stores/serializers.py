@@ -47,9 +47,9 @@ class StoreModelByIdSerializer(serializers.ModelSerializer,GenericStoreFields):
     def to_representation(self, instance: StoreModel):
 
         ret = super().to_representation(instance)
-        sellers_to_store = [ seller for seller in ret['users'] if not seller['is_admin'] ]
-        admins_to_store = [ seller for seller in ret['users'] if seller['is_admin'] ]
-        ret.pop('users')
+        list_users = ret.pop('users')
+        sellers_to_store = [ seller for seller in list_users if not seller['is_admin'] ]
+        admins_to_store = [ seller for seller in list_users if seller['is_admin'] ]
         ret["sellers"] = sellers_to_store 
         ret["admins"] =  admins_to_store
 
