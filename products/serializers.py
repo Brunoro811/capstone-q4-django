@@ -1,6 +1,7 @@
 import pdb
-from rest_framework import serializers
+
 from categorys.models import CategoryModel
+from rest_framework import serializers
 
 from products.models import ProductModel
 
@@ -18,21 +19,21 @@ class LisCreateProducts(serializers.ModelSerializer):
             "is_active",
             "store_id",
             "category_id",
-            # "category"
         ]
 
         extra_kwargs = {
             "category_id": {"write_only": True},
         }
 
-    def create(self, validated_data):
-        print("\n\n\n\n", validated_data, "\n\n\n\n")
-        return super().create(validated_data)
+    def to_internal_value(self, data):
+        if "category" in data.keys():
+            category = CategoryModel.objects.get_or_create(
+                name__iexact=data.get("category")
+            )[0]
+            data["category_id"] = category.id
+        return super().to_internal_value(data)
 
     def to_representation(self, instance):
-        # category = CategoryModel.objects.get_or_create(name=instance.category_id)[0]
-        # ret = super().to_representation(instance)
-        # ret["category"] = category.name
-        # pdb.set_trace()
-        # return ret
-        return super().to_representation(instance)
+        ret = super().to_representation(instance)
+        ret["category"] = instance.category_id.name
+        return ret
