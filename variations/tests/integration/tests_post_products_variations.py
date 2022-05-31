@@ -15,6 +15,7 @@ from stores.models import StoreModel
 from stores.tests.utils import get_store_payload
 from variations.tests.utils import (
     create_variation_201_response_fields,
+    get_post_variation_payload,
     get_product_payload,
     get_variation_payload,
 )
@@ -51,12 +52,11 @@ class TestPostVariation(APITestCase):
         # Authenticating with admin credentials
         self.client.force_authenticate(user=self.admin)
 
-        data = get_variation_payload(self.product.id)
+        data = get_post_variation_payload(self.product.id)
 
         # Checking individualy if the updatable fields may be updated
 
         response = self.client.post(self.PATH, data, format="json")
-
         output = response.json()
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
@@ -71,7 +71,7 @@ class TestPostVariation(APITestCase):
         # Authenticating with admin credentials
         self.client.force_authenticate(user=self.admin)
 
-        data = get_variation_payload(self.product.id)
+        data = get_post_variation_payload(self.product.id)
 
         # Popping one field and testing if returns correct message
         for field in data.keys():
@@ -94,7 +94,7 @@ class TestPostVariation(APITestCase):
 
         self.client.credentials(HTTP_AUTHORIZATION="")
 
-        data = get_variation_payload(self.product.id)
+        data = get_post_variation_payload(self.product.id)
 
         response = self.client.post(self.PATH, data, format="json")
         output = response.json()
@@ -108,7 +108,7 @@ class TestPostVariation(APITestCase):
         # Authenticating with seller credentials
         self.client.force_authenticate(user=self.seller)
 
-        data = get_variation_payload(self.product.id)
+        data = get_post_variation_payload(self.product.id)
 
         response = self.client.post(self.PATH, data, format="json")
         output = response.json()
