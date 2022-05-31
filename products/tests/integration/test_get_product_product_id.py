@@ -2,9 +2,10 @@ from uuid import uuid4
 
 from accounts.models import AccountModel
 from accounts.tests.utils.util import user_admin_correct, user_seller_correct
-from categorys.models import CategoryModel
+from categories.models import CategoryModel
 from products.models import ProductModel
-from products.tests.utils.utils import correct_product, products_fields_response
+from products.tests.utils.utils import (correct_product,
+                                        products_fields_response)
 from rest_framework import status
 from rest_framework.test import APITestCase
 from stores.models import StoreModel

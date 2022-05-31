@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 
-from categorys.models import CategoryModel
+from categories.models import CategoryModel
 
 
 class GetUpdateCategorySerializer(ModelSerializer):

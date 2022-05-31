@@ -1,4 +1,4 @@
-from categorys.models import CategoryModel
+from categories.models import CategoryModel
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
