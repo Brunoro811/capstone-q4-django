@@ -1,9 +1,11 @@
-from categorys.models import CategoryModel
+from categories.models import CategoryModel
 from django.test import TestCase
 from products.models import ProductModel
 from products.tests.utils import product_shirt
 from stores.models import StoreModel
 from stores.tests.utils import store_correct
+from variations.models import VariationModel
+from variations.tests.utils import generate_variation_for_size
 
 
 class OrdersModelTest(TestCase):
