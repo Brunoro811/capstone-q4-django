@@ -31,3 +31,15 @@ products_fields_response = [
     "store_id",
     "category",
 ]
+
+
+def correct_product_route(store_id, category_name):
+    return {
+        "name": "Botas muito boas",
+        "cost_value": 19.99,
+        "sale_value_retail": 18.99,
+        "sale_value_wholesale": 16.99,
+        "quantity_wholesale": 200,
+        "store_id": store_id,
+        "category": category_name,
+    }
