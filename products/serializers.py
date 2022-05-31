@@ -1,5 +1,3 @@
-import pdb
-
 from categorys.models import CategoryModel
 from rest_framework import serializers
 
@@ -30,17 +28,7 @@ class LisCreateProducts(serializers.ModelSerializer):
 class GetUpdateProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductModel
-        fields = [
-            "id",
-            "name",
-            "cost_value",
-            "sale_value_retail",
-            "sale_value_wholesale",
-            "quantity_wholesale",
-            "is_active",
-            "store_id",
-            "category_id",
-        ]
+        fields = "__all__"
         extra_kwargs = {"category_id": {"write_only": True}}
 
     def to_internal_value(self, data):
