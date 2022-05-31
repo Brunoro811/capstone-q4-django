@@ -18,7 +18,7 @@ def product_update(store_id, category):
         "sale_value_wholesale": 26.99,
         "quantity_wholesale": 400,
         "store_id": store_id,
-        "category_id": category,
+        "category": category,
     }
 
 
@@ -29,5 +29,5 @@ products_fields_response = [
     "sale_value_wholesale",
     "quantity_wholesale",
     "store_id",
-    "category_id",
+    "category",
 ]

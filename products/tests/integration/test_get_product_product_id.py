@@ -39,10 +39,8 @@ class TestGetProduct(APITestCase):
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn("id", response.json())
-        self.assertEqual(response.json()["id"], str(product_id))
-        self.assertIn("name", response.json())
-        self.assertIsInstance(response.json()["name"], str)
+        for item in products_fields_response:
+            self.assertIn(item, response.json())
 
     def test_if_user_cant_get_product_without_authorization_header(self):
         product_id = self.test_product.id

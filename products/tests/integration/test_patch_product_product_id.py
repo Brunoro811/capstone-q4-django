@@ -35,7 +35,7 @@ class TestGetProduct(APITestCase):
         product_id = self.test_product.id
         self.client.force_authenticate(user=self.test_admin)
         for key, value in self.product_update.items():
-            if key != "store_id" and key != "category_id":
+            if key != "store_id" and key != "category":
                 response = self.client.patch(
                     f"/products/{product_id}/", {key: value}, format="json"
                 )
@@ -47,9 +47,21 @@ class TestGetProduct(APITestCase):
                         self.assertIn(product_field, response.json())
                         self.assertEqual(response.json()[product_field], value)
             else:
-                response = self.client.patch(
-                    f"/products/{product_id}/", {key: str(value.id)}, format="json"
-                )
+                if key == "store_id":
+                    response = self.client.patch(
+                        f"/products/{product_id}/", {key: str(value.id)}, format="json"
+                    )
+                    self.assertIn(key, response.json())
+                    self.assertIsInstance(response.json()[key], str)
+                    self.assertEqual(response.json()[key], str(value.id))
+
+                if key == "category_id":
+                    response = self.client.patch(
+                        f"/products/{product_id}/", {key: value}, format="json"
+                    )
+                    self.assertIn(key, response.json())
+                    self.assertIsInstance(response.json()[key], str)
+                    self.assertEqual(response.json()[key], value)
 
     def test_if_user_cant_update_a_product_without_authorization_header(self):
         product_id = self.test_product.id
