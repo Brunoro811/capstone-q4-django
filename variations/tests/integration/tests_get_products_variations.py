@@ -6,6 +6,8 @@ from products.models import ProductModel
 from rest_framework.status import HTTP_200_OK, HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN
 from rest_framework.test import APITestCase
 from stokar.utils.tests import forbidden_details, unauthorized_details
+from stores.models import StoreModel
+from stores.tests.utils import get_store_payload
 from variations.models import VariationModel
 from variations.tests.utils import (
     get_product_payload,
@@ -29,11 +31,17 @@ class TestGetVariation(APITestCase):
 
         # Creating category
         cls.category_data = get_category_payload()
-        cls.store: CategoryModel = CategoryModel.objects.create(**cls.category_data)
+        cls.category: CategoryModel = CategoryModel.objects.create(**cls.category_data)
+
+        # Creating store
+        cls.store_data = get_store_payload()
+        cls.store: StoreModel = StoreModel.objects.create(**cls.store_data)
 
         # Creating product
         cls.product_data = get_product_payload()
-        cls.product: ProductModel = ProductModel.objects.create(**cls.product_data)
+        cls.product: ProductModel = ProductModel.objects.create(
+            **cls.product_data, category_id=cls.category, store_id=cls.store
+        )
 
     def test_if_admin_can_list_product_variations_200(self):
         # Inserting variations

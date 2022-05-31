@@ -11,6 +11,8 @@ from rest_framework.status import (
 )
 from rest_framework.test import APITestCase
 from stokar.utils.tests import forbidden_details, unauthorized_details
+from stores.models import StoreModel
+from stores.tests.utils import get_store_payload
 from variations.tests.utils import (
     create_variation_201_response_fields,
     get_product_payload,
@@ -33,11 +35,17 @@ class TestPostVariation(APITestCase):
 
         # Creating category
         cls.category_data = get_category_payload()
-        cls.store: CategoryModel = CategoryModel.objects.create(**cls.category_data)
+        cls.category: CategoryModel = CategoryModel.objects.create(**cls.category_data)
+
+        # Creating store
+        cls.store_data = get_store_payload()
+        cls.store: StoreModel = StoreModel.objects.create(**cls.store_data)
 
         # Creating product
         cls.product_data = get_product_payload()
-        cls.product: ProductModel = ProductModel.objects.create(**cls.product_data)
+        cls.product: ProductModel = ProductModel.objects.create(
+            **cls.product_data, category_id=cls.category, store_id=cls.store
+        )
 
     def test_if_creates_product_variation_201(self):
         # Authenticating with admin credentials
