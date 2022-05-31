@@ -15,7 +15,7 @@ from stores.models import StoreModel
 from stores.tests.utils import store_success, store_success_update
 
 
-class TestGetProduct(APITestCase):
+class TestPatchProduct(APITestCase):
     @classmethod
     def setUpTestData(cls):
         cls.test_admin = AccountModel.objects.create_user(**user_admin_correct())
@@ -94,9 +94,19 @@ class TestGetProduct(APITestCase):
     def test_if_user_cant_update_a_product_that_doesnt_exists(self):
         product_id = uuid4()
         self.client.force_authenticate(user=self.test_admin)
-        response = self.client.get(f"/products/{product_id}/", format="json")
+        response = self.client.patch(f"/products/{product_id}/", format="json")
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertIn("detail", response.json())
         self.assertEqual(response.json()["detail"], "Not found.")
+
+    def test_if_user_can_update_a_product_store_with_a_store_that_doesn_exists(self):
+        product_id = self.test_product.id
+        self.client.force_authenticate(user=self.test_admin)
+        response = self.client.patch(f"/products/{product_id}/", {"store_id": uuid4()}, format='json')
+        
+        self.assertEqual(response.headers['Content-Type'], 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertIn('detail', response.json())
+        self.assertEqual(response.json()['detail'], 'store not found')

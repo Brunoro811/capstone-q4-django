@@ -6,6 +6,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from stores.models import StoreModel
 
+from products.exceptions import StoreDoesNotExists
 from products.models import ProductModel
 from products.permissions import IsAdmin
 from products.serializers import GetUpdateProductSerializer
@@ -31,9 +32,7 @@ class GetUpdateProductView(generics.RetrieveUpdateAPIView):
             store_exists = StoreModel.objects.filter(
                 id=request.data.get("store_id")
             ).exists()
-            category_exists = CategoryModel.objects.filter(
-                id=request.data.get("category_id")
-            ).exists()
+
             if "store_id" in request.data.keys():
                 if store_exists:
                     product.store_id = StoreModel.objects.get(
@@ -41,14 +40,6 @@ class GetUpdateProductView(generics.RetrieveUpdateAPIView):
                     )
                     product.save()
                 else:
-                    raise Exception
-            if "category_id" in request.data.keys():
-                if category_exists:
-                    product.category_id = CategoryModel.objects.get(
-                        id=request.data.get("category_id")
-                    )
-                    product.save()
-                else:
-                    raise Exception
+                    raise StoreDoesNotExists
 
         return super().patch(request, *args, **kwargs)
