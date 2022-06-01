@@ -14,8 +14,8 @@ class OrdersModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     total_value = models.FloatField()
 
-    seller_id = models.ForeignKey("accounts.AccountModel", on_delete=models.PROTECT,related_name="+")
-    store_id = models.ForeignKey("stores.StoreModel", on_delete=models.PROTECT,related_name="+")
+    seller = models.ForeignKey("accounts.AccountModel", on_delete=models.PROTECT,related_name="+")
+    store = models.ForeignKey("stores.StoreModel", on_delete=models.PROTECT,related_name="+")
     
     variations = models.ManyToManyField("variations.VariationModel", related_name='+', through='orders.OrderVariationsModel')
 
@@ -29,8 +29,8 @@ class OrderVariationsModel(models.Model):
     
     id = models.UUIDField(primary_key=True,default=uuid4,editable=False)
     
-    order_id = models.ForeignKey("orders.OrdersModel", on_delete=models.PROTECT)
-    variation_id = models.ForeignKey("variations.VariationModel",on_delete=models.PROTECT)
+    order = models.ForeignKey("orders.OrdersModel", on_delete=models.PROTECT)
+    variation = models.ForeignKey("variations.VariationModel",on_delete=models.PROTECT)
     
     sale_value = models.FloatField()
     quantity = models.IntegerField()
