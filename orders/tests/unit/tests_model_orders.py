@@ -30,8 +30,8 @@ class OrdersModelTest(TestCase):
 
         cls.orders =  {
             **generate_order(),
-            'seller_id': cls.seller ,
-            'store_id': cls.store ,
+            'seller': cls.seller ,
+            'store': cls.store ,
             'total_value': 200.1
         }
         cls.orders_obj = OrdersModel.objects.create(**cls.orders)
@@ -51,11 +51,11 @@ class OrdersModelTest(TestCase):
 
         self.assertIsInstance( self.orders_obj.created_at, datetime )
         
-        self.assertIsInstance( self.orders_obj.seller_id.id, UUID )
-        self.assertIsInstance( self.orders_obj.seller_id, AccountModel )
+        self.assertIsInstance( self.orders_obj.seller.id, UUID )
+        self.assertIsInstance( self.orders_obj.seller, AccountModel )
 
-        self.assertIsInstance( self.orders_obj.store_id.id, UUID )
-        self.assertIsInstance( self.orders_obj.store_id, StoreModel )
+        self.assertIsInstance( self.orders_obj.store.id, UUID )
+        self.assertIsInstance( self.orders_obj.store, StoreModel )
 
 
 
@@ -79,31 +79,33 @@ class OrdersVariationsModelTest(TestCase):
         )
 
         
-        cls.variation = {
+        cls.variation_P = {
             **generate_variation_for_size(),
             'product_id': cls.product_shirt_obj
         }
         
-        cls.variation_obj = VariationModel.objects.create(
-            **cls.variation
+        
+        cls.variation_obj_P = VariationModel.objects.create(
+            **cls.variation_P
         )
 
         cls.orders =  {
-            **generate_order(),
-            'seller_id': cls.seller ,
-            'store_id': cls.store ,
+            'seller': cls.seller ,
+            'store': cls.store ,
             'total_value': 200.1
         }
         cls.orders_obj = OrdersModel.objects.create(**cls.orders)
         
-        cls.orders_variations ={
+        cls.orders_variations = {
                 'sale_value': cls.product_shirt_obj.sale_value_retail ,
                 'quantity':3,
-                'order_id': cls.orders_obj,
-                'variation_id': cls.variation_obj
+                'order': cls.orders_obj,
+                'variation': cls.variation_obj_P
             }
 
         cls.orders_variations_obj = OrderVariationsModel.objects.create(**cls.orders_variations)
+        cls.list_orders_variation_created = [cls.orders_variations_obj]
+
         
         return super().setUpTestData()  
     
@@ -117,8 +119,49 @@ class OrdersVariationsModelTest(TestCase):
         self.assertIsInstance(self.orders_variations_obj.quantity, int)
         self.assertEqual(self.orders_variations_obj.quantity, self.orders_variations['quantity'])
 
-        self.assertIsInstance(self.orders_variations_obj.order_id, OrdersModel)
+        self.assertIsInstance(self.orders_variations_obj.order, OrdersModel)
 
-        self.assertIsInstance(self.orders_variations_obj.variation_id, VariationModel)
+        self.assertIsInstance(self.orders_variations_obj.variation, VariationModel)
         
+    def test_model_orders_variations_relationship_many_to_many(self):
+
+        self.orders =  {
+            'seller': self.seller ,
+            'store': self.store ,
+            'total_value': 159.99
+        }
+        self.orders_obj = OrdersModel.objects.create(**self.orders)
+
+        self.variation_M = {
+            **generate_variation_for_size('M'),
+            'product_id': self.product_shirt_obj
+        }
+
+        self.variation_obj_M = VariationModel.objects.create(
+            **self.variation_M
+        )
         
+        self.orders_variations_list = [
+            OrderVariationsModel(**{
+                'sale_value': self.product_shirt_obj.sale_value_retail ,
+                'quantity':3,
+                'order': self.orders_obj,
+                'variation': self.variation_obj_M
+            }),
+            OrderVariationsModel(**{
+                'sale_value': self.product_shirt_obj.sale_value_retail ,
+                'quantity':2,
+                'order': self.orders_obj,
+                'variation': self.variation_obj_P
+            })
+        ]
+        
+        self.order_list_variation = OrderVariationsModel.objects.bulk_create(self.orders_variations_list)
+            
+        list_id_variation_order = [ variation.id for variation in self.orders_obj.variations.all() ]
+        list_id_variation = [ variation.variation.id for variation in self.order_list_variation ]
+        
+        for variation in list_id_variation_order:
+            print(f"\n List: { variation in list_id_variation } \n")
+
+    
