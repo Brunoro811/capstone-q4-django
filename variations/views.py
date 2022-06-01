@@ -1,5 +1,3 @@
-import pdb
-
 from products.models import ProductModel
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
