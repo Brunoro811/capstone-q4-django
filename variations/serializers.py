@@ -7,3 +7,9 @@ class ListUpdateSerializer(ModelSerializer):
     class Meta:
         model = VariationModel
         fields = "__all__"
+
+
+class UpdateProductVariationSerializer(ModelSerializer):
+    class Meta:
+        model = VariationModel
+        fields = "__all__"
