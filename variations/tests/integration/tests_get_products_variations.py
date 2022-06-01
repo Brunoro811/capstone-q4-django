@@ -1,19 +1,17 @@
 from accounts.models import AccountModel
 from accounts.tests.utils import get_admin_payload, get_seller_payload
-from categorys.models import CategoryModel
-from categorys.tests.utils import get_category_payload
+from categories.models import CategoryModel
+from categories.tests.utils import get_category_payload
 from products.models import ProductModel
-from rest_framework.status import HTTP_200_OK, HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN
+from rest_framework.status import (HTTP_200_OK, HTTP_401_UNAUTHORIZED,
+                                   HTTP_403_FORBIDDEN)
 from rest_framework.test import APITestCase
 from stokar.utils.tests import forbidden_details, unauthorized_details
 from stores.models import StoreModel
 from stores.tests.utils import get_store_payload
 from variations.models import VariationModel
-from variations.tests.utils import (
-    get_product_payload,
-    get_variation_payload,
-    list_variations_200_response_fields,
-)
+from variations.tests.utils import (get_product_payload, get_variation_payload,
+                                    list_variations_200_response_fields)
 
 
 class TestGetVariation(APITestCase):
