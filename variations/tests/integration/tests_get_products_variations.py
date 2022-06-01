@@ -1,7 +1,7 @@
 from accounts.models import AccountModel
 from accounts.tests.utils import get_admin_payload, get_seller_payload
 from categories.models import CategoryModel
-from categorys.tests.utils import get_category_payload
+from categories.tests.utils import get_category_payload
 from products.models import ProductModel
 from rest_framework.status import (HTTP_200_OK, HTTP_401_UNAUTHORIZED,
                                    HTTP_403_FORBIDDEN)
