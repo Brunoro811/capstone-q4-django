@@ -1,6 +1,3 @@
-# [x] 200 OK
-# [x] 401 UNAUTHORIZED
-# [] 404 Not Found
 from uuid import uuid4
 
 from accounts.models import AccountModel
