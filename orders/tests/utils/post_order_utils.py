@@ -1,8 +1,10 @@
 import random
+from functools import reduce
 
 from faker import Faker
 
 fake = Faker()
+from orders.models import OrdersModel, OrderVariationsModel
 
 
 def variation_request(variation_list: list):
@@ -45,7 +47,38 @@ fields_in_each_product_in_response = [
     "variation",
 ]
 fields_in_variation_product = ["id", "size", "color", "product_id"]
-def order_creation_model():
-    return {
-        
-    }
+
+
+def order_and_order_variations(variations, seller_id, store_id):
+
+    order_variations = [
+        OrderVariationsModel(
+            {
+                "sale_value": variation.product_id.sale_value_wholesale
+                if variation.quantity >= variation.product_id.quantity_wholesale
+                else variation.product_id.sale_value_retail,
+                "quantity": variation.quantity,
+                "order_id": str(order.id),
+                "variation_id": str(variation.id),
+            }
+        )
+        for variation in variations
+    ]
+
+    order_variations_instances = OrderVariationsModel.objects.bulk_create(
+        order_variations
+    )
+
+    order = OrdersModel.objects.create(
+        total_value=reduce(
+            lambda a, b: a + b,
+            [
+                variation.sale_value * variation.quantity
+                for variation in order_variations
+            ],
+        ),
+        seller_id=seller_id,
+        store_id=store_id,
+    )
+
+    return order, order_variations_instances

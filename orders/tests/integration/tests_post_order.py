@@ -42,10 +42,44 @@ class TestPostOrder(APITestCase):
 
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        # verifica cada campo do response.json(), que é esperado ser um objeto(
+        # {
+        # 	"id": uuid,
+        # 	"created_at": datetime,
+        # 	"total_value": float,
+        # 	"seller_id": uuid (do seller que fez a requisição),
+        # 	"store_id": uuid,
+        # 	"products":[
+        # 		{
+        # 			"product": {
+        # 				"id": uuid,
+        # 				"name": string,
+        # 			  "cost_value": float,
+        # 				"sale_value_retail": float,
+        # 				"sale_value_wholesale": float,
+        # 				"quantity_wholesale": integer,
+        # 				"store_id": uuid,
+        # 				"category": string,
+        # 				"variation": {
+        # 					"id": uuid,
+        # 					"size": string,
+        # 					"color": string,
+        # 					"product_id": uuid,
+        # 					}
+        # 				},
+        # 			"sale_value": float,
+        # 			"quantity": int,
+        # 		},
+        # 		(...)
+        # 	]
+        # })
         for response_field in fields_in_response:
+            # verifica se o campo está nos campos esperados
             self.assertIn(response_field, response.json())
             if response_field == "products":
+                # verifica os campos de cada produto, que é esperado ser uma lista
                 for product in response.json()[response_field]:
+                    # verifica se as chaves são as esperadas
                     self.assertEqual(
                         set(product.keys()),
                         set(fields_in_products_in_response),
