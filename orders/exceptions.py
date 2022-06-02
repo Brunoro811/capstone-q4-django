@@ -24,13 +24,6 @@ class UnprocessableEntityError(APIException):
     default_code = "unprocessable entity"
 
 
-class VariationNotFoundError(NotFound):
-    default_detail = {"name": ["category with this name already exists."]}
-
-    def __init__(self, detail=None, code=None):
-        ...
-
-
 class ProductNotAssociatedOwnStoreError(ForbiddenError):
     detail = ...
 
@@ -67,3 +60,7 @@ class VariationNotFoundError(NotFoundError):
 
     def __init__(self, id):
         self.detail = {"detail": "variation not found", "variation": {"id": id}}
+
+
+class SellerNotAssociatedToAnyStoreError(ForbiddenError):
+    default_detail = {"detail": "Seller not associated to any store yet."}

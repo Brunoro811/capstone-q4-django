@@ -14,6 +14,7 @@ from variations.models import VariationModel
 
 from orders.exceptions import (
     ProductNotAssociatedOwnStoreError,
+    SellerNotAssociatedToAnyStoreError,
     UnavaliableStockQuantityError,
     VariationNotFoundError,
 )
@@ -79,9 +80,10 @@ class ListCreateOrderView(ListCreateAPIView):
 
         variations_info = input.data.pop("variations")
         seller: AccountModel = request.user
+        print(seller.store_id)
 
         if not seller.store_id:
-            raise ...
+            raise SellerNotAssociatedToAnyStoreError()
 
         variations = [
             {
