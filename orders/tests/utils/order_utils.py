@@ -54,6 +54,7 @@ def order_and_order_variations(variations, seller_id, store_id):
     order_variations = [
         OrderVariationsModel(
             {
+                # define se o preço será de atacado ou varejo baseado na quantidade mínima para tal
                 "sale_value": variation.product_id.sale_value_wholesale
                 if variation.quantity >= variation.product_id.quantity_wholesale
                 else variation.product_id.sale_value_retail,

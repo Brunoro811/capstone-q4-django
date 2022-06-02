@@ -1,4 +1,4 @@
-from orders.tests.utils.post_order_utils import (
+from orders.tests.utils.order_utils import (
     fields_in_each_product_in_response,
     fields_in_products_in_response,
     fields_in_response,
