@@ -5,11 +5,18 @@ from accounts.models import AccountModel
 from django.db.models import Model
 from products.models import ProductModel
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.exceptions import NotFound
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.serializers import ValidationError
 from variations.models import VariationModel
 
+from orders.exceptions import (
+    ProductNotAssociatedOwnStoreError,
+    UnavaliableStockQuantityError,
+    VariationNotFoundError,
+)
 from orders.models import OrdersModel, OrderVariationsModel
 from orders.permissions import (
     ListCreateOrderAuthenticatePermission,
@@ -18,7 +25,7 @@ from orders.permissions import (
 from orders.serializers import CreateOrderSerializer
 
 
-class listCreateOrderView(ListCreateAPIView):
+class ListCreateOrderView(ListCreateAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [
         ListCreateOrderAuthenticatePermission,
@@ -33,10 +40,14 @@ class listCreateOrderView(ListCreateAPIView):
         ).first()
 
         if not variation:
-            raise ...
+            raise VariationNotFoundError(payload["id"])
+
+        seller: AccountModel = self.request.user
+        if seller.store_id.id != variation.product_id.store_id.id:
+            raise ProductNotAssociatedOwnStoreError(variation.product_id)
 
         if payload["quantity"] > variation.quantity:
-            raise ...
+            raise UnavaliableStockQuantityError(payload["quantity"], variation)
 
         return variation
 
@@ -70,7 +81,7 @@ class listCreateOrderView(ListCreateAPIView):
         seller: AccountModel = request.user
 
         if not seller.store_id:
-            self.fail()
+            raise ...
 
         variations = [
             {

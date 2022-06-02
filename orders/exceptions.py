@@ -14,6 +14,11 @@ class ForbiddenError(APIException):
     default_code = "forbidden"
 
 
+class NotFoundError(APIException):
+    status_code = HTTP_404_NOT_FOUND
+    default_code = "not found"
+
+
 class UnprocessableEntityError(APIException):
     status_code = HTTP_422_UNPROCESSABLE_ENTITY
     default_code = "unprocessable entity"
@@ -32,8 +37,33 @@ class ProductNotAssociatedOwnStoreError(ForbiddenError):
     def __init__(self, product: ProductModel):
         self.detail = {
             "detail": "Product not associated to seller's related store.",
-            "product": {
-                "id": product.id,
-                "name": product.name,
-            },
+            "products": [
+                {
+                    "id": product.id,
+                    "name": product.name,
+                },
+            ],
         }
+
+
+class UnavaliableStockQuantityError(UnprocessableEntityError):
+    detail = ...
+
+    def __init__(self, demanded: int, variation: VariationModel):
+        self.detail = {
+            "detail": "Insuficient quantity on stock.",
+            "variations": [
+                {
+                    "id": variation.id,
+                    "ordered_quantity": demanded,
+                    "available_quantity": variation.quantity,
+                }
+            ],
+        }
+
+
+class VariationNotFoundError(NotFoundError):
+    detail = ...
+
+    def __init__(self, id):
+        self.detail = {"detail": "variation not found", "variation": {"id": id}}
