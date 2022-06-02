@@ -23,7 +23,7 @@ from orders.permissions import (
     ListCreateOrderAuthenticatePermission,
     ListCreateOrderAuthorizePermission,
 )
-from orders.serializers import CreateOrderSerializer
+from orders.serializers import CreateOrderResponseSerializer, CreateOrderSerializer
 
 
 class ListCreateOrderView(ListCreateAPIView):
@@ -122,6 +122,6 @@ class ListCreateOrderView(ListCreateAPIView):
 
         self.ajust_stock(order)
 
-        output = ...
+        output = CreateOrderResponseSerializer(order)
 
-        return Response({"info": "deu bom"})
+        return Response(output.data)
