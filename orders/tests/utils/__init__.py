@@ -6,3 +6,5 @@ from orders.tests.utils.post_order_utils import (
     variation_creation_model,
     variation_request,
 )
+
+from .default_value import generate_order
