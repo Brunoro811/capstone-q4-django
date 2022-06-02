@@ -162,6 +162,6 @@ class OrdersVariationsModelTest(TestCase):
         list_id_variation = [ variation.variation.id for variation in self.order_list_variation ]
         
         for variation in list_id_variation_order:
-            print(f"\n List: { variation in list_id_variation } \n")
+            self.assertIn(variation, list_id_variation)
 
     
