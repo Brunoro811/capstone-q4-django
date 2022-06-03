@@ -4,9 +4,10 @@ from accounts.exceptions import SellerNotAuthorizedForThisActionException
 from accounts.models import AccountModel
 
 
-class AccountSerializer(serializers.ModelSerializer):
+class GenericFields():
+    
     class Meta:
-
+        abstract = True
         model = AccountModel
         fields = (
             "id",
@@ -20,6 +21,11 @@ class AccountSerializer(serializers.ModelSerializer):
             "password",
             "store_id",
         )
+
+
+class AccountSerializer(serializers.ModelSerializer, GenericFields):
+    
+    class Meta(GenericFields.Meta):
 
         extra_kwargs = {
             "id": {"read_only": True},
@@ -65,22 +71,8 @@ class AccountSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 
-class AccountUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-
-        model = AccountModel
-        fields = (
-            "id",
-            "username",
-            "is_admin",
-            "is_seller",
-            "email",
-            "first_name",
-            "last_name",
-            "created_at",
-            "store_id",
-            "password",
-        )
+class AccountUpdateSerializer(serializers.ModelSerializer,GenericFields):
+    class Meta(GenericFields.Meta):
 
         extra_kwargs = {
             "id": {"read_only": True},
@@ -126,21 +118,9 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(required=True, help_text="Field is string.")
 
 
-class RetrieveUpdateOneSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AccountModel
-        fields = [
-            "id",
-            "email",
-            "username",
-            "password",
-            "is_admin",
-            "is_seller",
-            "first_name",
-            "last_name",
-            "created_at",
-            "store_id",
-        ]
+class RetrieveUpdateOneSerializer(serializers.ModelSerializer,GenericFields):
+    class Meta(GenericFields.Meta):
+
         read_only_fields = ["id", "created_at"]
         extra_kwargs = {
             "id": {"read_only": True},
@@ -163,3 +143,12 @@ class RetrieveUpdateOneSerializer(serializers.ModelSerializer):
             instance.save()
 
         return super().update(instance, validated_data)
+
+class GetOneAccountsSerialiser(serializers.Serializer):
+    class Meta(GenericFields.Meta):
+        model = AccountModel
+        fields = ('user_id',)
+
+        extra_kwargs = {
+            "user_id": {"read_only": True, "help_text": "Field id UUID."},
+            }
