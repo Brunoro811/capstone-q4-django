@@ -108,3 +108,16 @@ class TestPostOrder(APITestCase):
             response.json()["detail"],
             "You do not have permission to perform this action.",
         )
+
+    def test_if_evaluates_empty_variations(self):
+        self.client.force_authenticate(user=self.test_seller)
+        data = {"variations": []}
+        response = self.client.post("/orders/", data, format="json")
+
+        self.assertEqual(response.headers["Content-Type"], "application/json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("detail", response.json())
+        self.assertEqual(
+            response.json()["detail"],
+            "You must provide at least one variation.",
+        )
