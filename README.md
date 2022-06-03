@@ -4,7 +4,7 @@
 
 <br/>
 
-> Status: Em Desenvolvimento ⚠️
+> Status: Versão 1.0
 
 > [![NPM](https://img.shields.io/github/license/Brunoro811/capstone-q4-django?style=for-the-badge)](https://github.com/Brunoro811/capstone-q4-django/blob/development/LICENSE)
 
@@ -14,20 +14,44 @@
 
 ### Base url da api
 
-**Deploy pentente**
+https://stokar-app.herokuapp.com/
+
+### Documentação da API
+
+https://stokar-app.herokuapp.com/docs/
 
 **Controle de Estoque Api** é uma aplicação de serviço construida para controle de estoque de uma micro empresa com uma ou vários lojas. Esta aplicação foi desenvolvida com o Python, Django e Rest Framework.
+
+# Metodologias Ágeis
+
+- Kanban
+- SCRUM
 
 # Tecnologias Utilizadas
 
 - Python
 - Django
 - Django Rest Framework
+- Banco de dados Relacional
+- Lucidchart
+- CI Github Actions
+- CD Heroku
+- Notion
+- TDD
+- Generics View
 
 # Bibliotecas Utilizadas
 
 - python-dotenv
 - rest_framework
+- coreapi
+- openapi
+- Faker
+- Django
+- Dotenv ( conferir a integração de arquivos .env com Django )
+- Pylint ( Linter )
+- Black ( Formatter )
+- Django On Heroku Lib
 
 # Como executar
 
@@ -54,9 +78,18 @@ pip install -r requirements.txt
 
 4 - Criar um arquivo .env com os dados de .env.example e subistituie pelos seus dados os campos:
 
-- Bando de dados
-- usuário do banco
-- senha do banco
+|       Variavel | Descrição                       |
+| -------------: | :------------------------------ |
+|       DATABASE | Nome do ando de dados           |
+|           PORT | Porta do banco                  |
+|           HOST | host                            |
+|           USER | Usuário do banco                |
+|       PASSWORD | Senha do banco                  |
+|     ADMIN_NAME | Administrador padrão do sistema |
+| ADMIN_PASSWORD | Senha do administrador          |
+|    ADMIN_EMAIL | Email do administrador          |
+|     SECRET_KEY | Secret key                      |
+|           TEST | Para ambiente de test           |
 
 5 - Rodar as migrações
 
@@ -71,7 +104,7 @@ pip install -r requirements.txt
 python manage.py runserver
 ```
 
-## Author
+## Authors
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
