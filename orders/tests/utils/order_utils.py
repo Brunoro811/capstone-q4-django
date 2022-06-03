@@ -46,7 +46,14 @@ fields_in_each_product_in_response = [
     "category",
     "variation",
 ]
-fields_in_variation_product = ["id", "size", "color", "product_id"]
+fields_in_variation_product = [
+    "id",
+    "size",
+    "color",
+    "product_id",
+    "is_active",
+    "quantity",
+]
 
 
 def order_and_order_variations(variations, seller_id, store_id):
