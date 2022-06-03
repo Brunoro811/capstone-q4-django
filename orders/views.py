@@ -13,6 +13,7 @@ from rest_framework.status import HTTP_201_CREATED
 from variations.models import VariationModel
 
 from orders.exceptions import (
+    NotSellerError,
     ProductNotAssociatedOwnStoreError,
     SellerNotAssociatedToAnyStoreError,
     UnavaliableStockQuantityError,
@@ -82,7 +83,10 @@ class ListCreateOrderView(ListCreateAPIView):
         seller: AccountModel = request.user
 
         if not seller.store_id:
-            raise SellerNotAssociatedToAnyStoreError()
+            raise SellerNotAssociatedToAnyStoreError
+
+        if not seller.is_seller:
+            raise NotSellerError
 
         variations = [
             {

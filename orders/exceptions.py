@@ -64,3 +64,7 @@ class VariationNotFoundError(NotFoundError):
 
 class SellerNotAssociatedToAnyStoreError(ForbiddenError):
     default_detail = {"detail": "Seller not associated to any store yet."}
+
+
+class NotSellerError(ForbiddenError):
+    default_detail = {"detail": "You do not have permission to perform this action."}
