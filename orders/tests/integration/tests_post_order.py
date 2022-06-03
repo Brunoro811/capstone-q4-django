@@ -78,7 +78,7 @@ class TestPostOrder(APITestCase):
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("variations", response.json())
-        self.assertEqual(response.json()["variations"], ["This field is required"])
+        self.assertEqual(response.json()["variations"], ["This field is required."])
 
     """
     def test_if_user_cant_create_order_if_is_not_logged(self):
