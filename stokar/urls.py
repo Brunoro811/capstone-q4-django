@@ -27,7 +27,7 @@ urlpatterns = [
         "docs/",
         include_docs_urls(
             title="Stokar API Documentation",
-            description="This documentation has all the endpoints, parameters and information about authenticated routes for this api v0.1",
+            description="This documentation has all the endpoints, parameters and information about authenticated routes for this api v1.0",
         ),
     ),
     path("", include("stores.urls")),
