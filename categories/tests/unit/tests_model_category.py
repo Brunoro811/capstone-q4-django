@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from categorys.models import CategoryModel
+from categories.models import CategoryModel
 from django.db.models import Model
 from django.test import TestCase
 
