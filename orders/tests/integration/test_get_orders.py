@@ -100,7 +100,6 @@ class TestGetOrder(APITestCase):
                             set(fields_in_variation_product),
                         )
 
-    """
     def test_if_admin_can_get_all_order(self):
         self.client.force_authenticate(user=self.test_admin)
         response = self.client.get("/orders/", format="json")
@@ -123,7 +122,7 @@ class TestGetOrder(APITestCase):
                             set(fields_in_each_product_in_response),
                         )
                         self.assertEqual(
-                            set(product.get("product").get("variant").keys()),
+                            set(product.get("product").get("variation").keys()),
                             set(fields_in_variation_product),
                         )
 
@@ -136,4 +135,3 @@ class TestGetOrder(APITestCase):
         self.assertEqual(
             response.json()["detail"], "Authentication credentials were not provided."
         )
-    """
