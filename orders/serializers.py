@@ -11,7 +11,7 @@ from rest_framework.serializers import (
 )
 from variations.models import VariationModel
 
-from orders.models import OrdersModel
+from orders.models import OrdersModel, OrderVariationsModel
 
 
 class VariationsInfoSerializer(Serializer):
@@ -27,10 +27,10 @@ class CreateOrderSerializer(ModelSerializer):
     variations = VariationsInfoSerializer(many=True)
 
 
-class OrderProductSerializer(ModelSerializer):
-    class Meta:
-        model = ProductModel
-        fields = "__all__"
+# class OrderProductSerializer(ModelSerializer):
+#     class Meta:
+#         model = ProductModel
+#         fields = "__all__"
 
 
 class OrderProductsSerializer(ModelSerializer):
@@ -58,7 +58,6 @@ class OrderVariationsSerializer(ModelSerializer):
 class CreateOrderResponseSerializer(ModelSerializer):
     seller_id = SerializerMethodField()
     store_id = SerializerMethodField()
-    # variations = OrderVariationsSerializer(many=True)
 
     class Meta:
         model = OrdersModel
@@ -68,8 +67,6 @@ class CreateOrderResponseSerializer(ModelSerializer):
             "total_value",
             "seller_id",
             "store_id",
-            # "products",
-            # "variations",
         ]
 
     def get_seller_id(self, obj: OrdersModel):
@@ -86,8 +83,20 @@ class CreateOrderResponseSerializer(ModelSerializer):
 
         vars: list[VariationModel] = instance.variations.all()
 
-        prods: List[ProductModel] = [var.product_id for var in vars]
+        ord_vars = OrderVariationsModel.objects.filter(order_id=instance.id).all()
 
-        ret["products"] = OrderProductsSerializer(prods, many=True).data
+        products = [
+            {
+                "product": {
+                    **OrderProductsSerializer(ord_var.variation.product_id).data,
+                    "variation": OrderVariationsSerializer(ord_var.variation).data,
+                    "sale_value": ord_var.sale_value,
+                    "quantity": ord_var.quantity,
+                }
+            }
+            for ord_var in ord_vars
+        ]
+
+        ret["products"] = products
 
         return ret
