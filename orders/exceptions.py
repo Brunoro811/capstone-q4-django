@@ -1,12 +1,17 @@
 from products.models import ProductModel
 from rest_framework.exceptions import APIException, NotFound
 from rest_framework.status import (
+    HTTP_400_BAD_REQUEST,
     HTTP_403_FORBIDDEN,
     HTTP_404_NOT_FOUND,
-    HTTP_409_CONFLICT,
     HTTP_422_UNPROCESSABLE_ENTITY,
 )
 from variations.models import VariationModel
+
+
+class BadRequestError(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_code = "bad request"
 
 
 class ForbiddenError(APIException):
@@ -68,3 +73,7 @@ class SellerNotAssociatedToAnyStoreError(ForbiddenError):
 
 class NotSellerError(ForbiddenError):
     default_detail = {"detail": "You do not have permission to perform this action."}
+
+
+class EmpyVariationsError(BadRequestError):
+    default_detail = {"detail": "You must provide at least one variation."}
