@@ -9,7 +9,7 @@ from rest_framework.exceptions import NotFound
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.serializers import ValidationError
+from rest_framework.status import HTTP_201_CREATED
 from variations.models import VariationModel
 
 from orders.exceptions import (
@@ -80,7 +80,6 @@ class ListCreateOrderView(ListCreateAPIView):
 
         variations_info = input.data.pop("variations")
         seller: AccountModel = request.user
-        print(seller.store_id)
 
         if not seller.store_id:
             raise SellerNotAssociatedToAnyStoreError()
@@ -124,4 +123,4 @@ class ListCreateOrderView(ListCreateAPIView):
 
         output = CreateOrderResponseSerializer(order)
 
-        return Response(output.data)
+        return Response(output.data, HTTP_201_CREATED)
