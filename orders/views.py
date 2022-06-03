@@ -36,6 +36,14 @@ class ListCreateOrderView(ListCreateAPIView):
     serializer_class = CreateOrderSerializer
     queryset = OrdersModel.objects.all()
 
+    def get(self, request, *args, **kwargs):
+        self.serializer_class = CreateOrderResponseSerializer
+        user = request.user
+        if not user.is_admin and user.is_seller:
+            self.queryset = OrdersModel.objects.filter(seller_id=user.id)
+
+        return super().get(request, *args, **kwargs)
+
     def get_or_fail(self, payload):
         variation: VariationModel = VariationModel.objects.filter(
             pk=payload["id"]
