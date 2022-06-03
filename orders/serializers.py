@@ -11,6 +11,7 @@ from rest_framework.serializers import (
 )
 from variations.models import VariationModel
 
+from orders.exceptions import EmpyVariationsError
 from orders.models import OrdersModel, OrderVariationsModel
 
 
@@ -26,11 +27,10 @@ class CreateOrderSerializer(ModelSerializer):
 
     variations = VariationsInfoSerializer(many=True)
 
-
-# class OrderProductSerializer(ModelSerializer):
-#     class Meta:
-#         model = ProductModel
-#         fields = "__all__"
+    def validate_variations(self, value):
+        if not value:
+            raise EmpyVariationsError
+        return value
 
 
 class OrderProductsSerializer(ModelSerializer):
