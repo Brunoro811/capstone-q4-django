@@ -26,13 +26,13 @@ class TestPostOrder(APITestCase):
         # criando category
         test_category = CategoryModel.objects.create(name="test category")
         # criando store
-        test_store = StoreModel.objects.create(**store_success)
+        cls.test_store = StoreModel.objects.create(**store_success)
         test_product = ProductModel.objects.create(
-            **correct_product(test_store, test_category)
+            **correct_product(cls.test_store, test_category)
         )
         # criando seller
         cls.test_seller = AccountModel.objects.create_user(
-            **user_seller_correct(), store_id=test_store
+            **user_seller_correct(), store_id=cls.test_store
         )
         # criando product
         variations = [
@@ -80,7 +80,6 @@ class TestPostOrder(APITestCase):
         self.assertIn("variations", response.json())
         self.assertEqual(response.json()["variations"], ["This field is required."])
 
-    """
     def test_if_user_cant_create_order_if_is_not_logged(self):
         response = self.client.post(
             "/orders/", variation_request(self.variations_instances), format="json"
@@ -95,6 +94,8 @@ class TestPostOrder(APITestCase):
 
     def test_if_user_cant_create_order_if_is_not_a_seller(self):
         self.test_admin.is_seller = False
+        self.test_admin.store_id = self.test_store
+        self.test_admin.save()
         self.client.force_authenticate(user=self.test_admin)
         response = self.client.post(
             "/orders/", variation_request(self.variations_instances), format="json"
@@ -107,5 +108,3 @@ class TestPostOrder(APITestCase):
             response.json()["detail"],
             "You do not have permission to perform this action.",
         )
-
-    """
