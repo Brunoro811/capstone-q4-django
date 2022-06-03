@@ -67,11 +67,10 @@ class TestPostOrder(APITestCase):
                     )
                     # verifica se as chaves são as esperadas ("id", "size", "color", "product_id")
                     self.assertEqual(
-                        set(product.get("product").get("variant").keys()),
+                        set(product.get("product").get("variation").keys()),
                         set(fields_in_variation_product),
                     )
 
-    """
     def test_if_user_cant_create_order_if_is_missing_some_field(self):
         self.client.force_authenticate(user=self.test_seller)
         response = self.client.post("/orders/", {}, format="json")
@@ -81,6 +80,7 @@ class TestPostOrder(APITestCase):
         self.assertIn("variations", response.json())
         self.assertEqual(response.json()["variations"], ["This field is required"])
 
+    """
     def test_if_user_cant_create_order_if_is_not_logged(self):
         response = self.client.post(
             "/orders/", variation_request(self.variations_instances), format="json"
