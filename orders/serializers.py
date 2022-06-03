@@ -90,9 +90,9 @@ class CreateOrderResponseSerializer(ModelSerializer):
                 "product": {
                     **OrderProductsSerializer(ord_var.variation.product_id).data,
                     "variation": OrderVariationsSerializer(ord_var.variation).data,
-                    "sale_value": ord_var.sale_value,
-                    "quantity": ord_var.quantity,
-                }
+                },
+                "sale_value": ord_var.sale_value,
+                "quantity": ord_var.quantity,
             }
             for ord_var in ord_vars
         ]
