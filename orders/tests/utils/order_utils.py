@@ -56,18 +56,23 @@ fields_in_variation_product = [
 ]
 
 
-def order_and_order_variations(variations, seller_id, store_id):
+def order_and_order_variations(variations, seller, store):
+    order = OrdersModel.objects.create(
+        total_value=0,
+        seller=seller,
+        store=store,
+    )
 
     order_variations = [
         OrderVariationsModel(
-            {
+            **{
                 # define se o preço será de atacado ou varejo baseado na quantidade mínima para tal
                 "sale_value": variation.product_id.sale_value_wholesale
                 if variation.quantity >= variation.product_id.quantity_wholesale
                 else variation.product_id.sale_value_retail,
                 "quantity": variation.quantity,
-                "order_id": str(order.id),
-                "variation_id": str(variation.id),
+                "order": order,
+                "variation": variation,
             }
         )
         for variation in variations
@@ -77,16 +82,11 @@ def order_and_order_variations(variations, seller_id, store_id):
         order_variations
     )
 
-    order = OrdersModel.objects.create(
-        total_value=reduce(
-            lambda a, b: a + b,
-            [
-                variation.sale_value * variation.quantity
-                for variation in order_variations
-            ],
-        ),
-        seller_id=seller_id,
-        store_id=store_id,
+    order.total_value = reduce(
+        lambda a, b: a + b,
+        [variation.sale_value * variation.quantity for variation in order_variations],
     )
+
+    order.save()
 
     return order, order_variations_instances

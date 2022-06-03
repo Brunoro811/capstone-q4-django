@@ -50,14 +50,16 @@ class TestGetOrder(APITestCase):
         )
 
         # criando order e order variations do seller
-        (seller_order, seller_order_variations,) = order_and_order_variations(
-            test_variations, str(test_seller.id), str(test_store.id)
-        )
+        (
+            seller_order,
+            seller_order_variations,
+        ) = order_and_order_variations(test_variations, test_seller, test_store)
 
         # criando order e order variations do admin
-        (admin_order, admin_order_variations,) = order_and_order_variations(
-            test_variations, str(test_admin.id), str(test_store.id)
-        )
+        (
+            admin_order,
+            admin_order_variations,
+        ) = order_and_order_variations(test_variations, test_admin, test_store)
         cls.test_category = test_category
         cls.test_store = test_store
         cls.test_admin = test_admin
@@ -80,11 +82,11 @@ class TestGetOrder(APITestCase):
         self.assertTrue(len(response.json()) <= len(OrderVariationsModel.objects.all()))
         for order in response.json():
             # verifica se consegue obter só as orders dele, não todas
-            self.assertEqual(order.seller_id, str(self.test_seller.id))
+            self.assertEqual(order["seller_id"], str(self.test_seller.id))
             for response_field in fields_in_response:
-                self.assertIn(response_field, response.json())
+                self.assertIn(response_field, order)
                 if response_field == "products":
-                    for product in response.json()[response_field]:
+                    for product in order[response_field]:
                         self.assertEqual(
                             set(product.keys()),
                             set(fields_in_products_in_response),
@@ -94,10 +96,11 @@ class TestGetOrder(APITestCase):
                             set(fields_in_each_product_in_response),
                         )
                         self.assertEqual(
-                            set(product.get("product").get("variant").keys()),
+                            set(product.get("product").get("variation").keys()),
                             set(fields_in_variation_product),
                         )
 
+    """
     def test_if_admin_can_get_all_order(self):
         self.client.force_authenticate(user=self.test_admin)
         response = self.client.get("/orders/", format="json")
@@ -133,3 +136,4 @@ class TestGetOrder(APITestCase):
         self.assertEqual(
             response.json()["detail"], "Authentication credentials were not provided."
         )
+    """
